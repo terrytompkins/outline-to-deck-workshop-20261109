@@ -1,0 +1,6 @@
+# Organization-specific material: keep out of the public repo
+internal/
+
+# Local checker output
+shots/
+__pycache__/
