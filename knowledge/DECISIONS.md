@@ -1,6 +1,6 @@
 # DECISIONS
 
-<!-- status: revision 2 | phase 1 | last written 2026-11-05 -->
+<!-- status: revision 3 | phase 2 (test) | last written 2026-11-05 -->
 
 A dated log of decisions about scope, audience, content, and design. Respect every *Decided* entry; if a request conflicts with one, say so before proceeding.
 
@@ -17,6 +17,8 @@ A dated log of decisions about scope, audience, content, and design. Respect eve
 
 ## Status
 - 2026-11-05 · Decided · Phase 1 in progress; outline not yet approved.
+- 2026-11-05 · Decided · Test run: Suzanne Edwards approves v0.1 only to test Phase 2, on branch test/phase2-v0.1. This is not the real approval.
+- 2026-11-05 · Decided · Outline v0.1 approved; Phase 2 begins.
 
 ## Scope and audience
 - 2026-11-05 · Proposed · Live path is sections 1–7 in 30 minutes, plus 5 minutes of Q&A; sections 5 and 6 get 2 minutes each.

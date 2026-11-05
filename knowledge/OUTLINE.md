@@ -1,8 +1,8 @@
 # OUTLINE — Outline First: How to Get Claude to Build the Deck You Actually Want
 
-<!-- status: version 0.1 | phase 1 | last written 2026-11-05 | approved: no -->
+<!-- status: version 0.1 | phase 2 (test) | last written 2026-11-05 | approved: yes (test only) -->
 
-**Status:** Phase 1 in progress; outline not yet approved.
+**Status:** v0.1 approved for a test build only, on branch test/phase2-v0.1. Not the real approval.
 **Session:** AI Learning Day, [TBD: November 9, 2026?], 11:00–11:45 AM; 35 minutes including Q&A
 **Facts verified:** November 5, 2026
 
