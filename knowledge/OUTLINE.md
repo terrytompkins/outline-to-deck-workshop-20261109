@@ -1,14 +1,15 @@
 # OUTLINE — Outline First: How to Get Claude to Build the Deck You Actually Want
 
-<!-- status: version 0.1 | phase 2 (test) | last written 2026-11-05 | approved: yes (test only) -->
+<!-- status: version 0.2 | phase 2 (test) | last written 2026-11-05 | approved: yes (test only) -->
 
-**Status:** v0.1 approved for a test build only, on branch test/phase2-v0.1. Not the real approval.
+**Status:** v0.1 approved for a test build only, on branch test/phase2-v0.1. Not the real approval. v0.2 changes 4.3 after that approval.
 **Session:** AI Learning Day, [TBD: November 9, 2026?], 11:00–11:45 AM; 35 minutes including Q&A
 **Facts verified:** November 5, 2026
 
 ## Changes by version (outline-only working aid)
 - v0.0: placeholder created.
 - v0.1: first full draft from BRIEF.md revision 2, the template files, and research checked November 5, 2026.
+- v0.2: 4.3 now shows the demo deck in a live frame (new `Embed:` directive); test branch only.
 
 ## Central message
 Get the content right in a text outline that Claude keeps in project files, tag what each part is, approve it, then build the deck once.
@@ -194,9 +195,10 @@ Main points:
 Speaker notes: Point out that this talk uses each of these.
 
 ### 4.3 From outline to slide [All] [Seed]
-- Suggested visual: two panels: a short tagged outline section on the left, the slide it became on the right, from the demo deck. [TBD: screenshot from examples/field-guide-demo/deck.html]
+Embed: examples/field-guide-demo/deck.html
+Fallback: If the frame is blank, open the demo deck in its own tab.
 
-Speaker notes: If time allows, open the demo deck live and press S to show the speaker view.
+Speaker notes: The frame is the demo deck, live. Click inside it to move through its slides; click outside it to return to this deck. Press S inside it for its speaker view.
 
 ### 4.4 [Try it yourself] Tag one section [All]
 Time: 5 minutes

@@ -1,6 +1,6 @@
 # DECISIONS
 
-<!-- status: revision 3 | phase 2 (test) | last written 2026-11-05 -->
+<!-- status: revision 4 | phase 2 (test) | last written 2026-11-05 -->
 
 A dated log of decisions about scope, audience, content, and design. Respect every *Decided* entry; if a request conflicts with one, say so before proceeding.
 
@@ -28,6 +28,7 @@ A dated log of decisions about scope, audience, content, and design. Respect eve
 - 2026-11-05 · Proposed · Teach outline-first as independent of the output tool; Phase 2 stays Reveal.js, with Claude Slides named as an alternative.
 - 2026-11-05 · Proposed · Why now: Claude can now build a deck in any conversation (release notes, September 16, 2026); this method makes it the deck you want.
 - 2026-11-05 · Proposed · Use the earlier internal token-spend talk as the worked example, described generically.
+- 2026-11-05 · Decided · Outline v0.2: 4.3 shows the demo deck in a live frame, with a text fallback (test branch only).
 
 ## Style and design
 
