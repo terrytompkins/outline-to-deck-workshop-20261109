@@ -1,0 +1,62 @@
+<!-- TOPIC 4: Tags: say what it is, let the style decide the look -->
+<section id="s4">
+<section class="topic" data-background-color="#E6F0EC">
+  <h2><span class="marker">4</span>Tags: say what it is, let the style decide the look</h2>
+  <ul>
+    <li>Tags mark what a piece of content is: a tip, a warning, a quiz, a hands-on activity, a speaker note.</li>
+    <li>The style guide decides what each tag looks like. Swap the guide and the same outline gets a new look.</li>
+    <li>Callouts use GitHub's alert syntax, so the outline still reads as plain text.</li>
+    <li>Claude adds tags while drafting and tells you which ones; you keep or remove them.</li>
+  </ul>
+  <footer><span>Source: <a href="https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax#alerts">GitHub: alerts</a></span></footer>
+  <div class="more"><svg class="ic" aria-hidden="true"><use href="#i-down"/></svg>more on this trail</div>
+</section>
+<section>
+  <h3><span class="num">4.1</span>Callouts: five boxes</h3>
+  <div class="types" role="list">
+    <div class="type type--tip" role="listitem"><div class="type__tab"><svg class="ic" aria-hidden="true"><use href="#i-tip"/></svg>Tip</div><p>A shortcut or better way to do something</p></div>
+    <div class="type type--remember" role="listitem"><div class="type__tab"><svg class="ic" aria-hidden="true"><use href="#i-remember"/></svg>Remember</div><p>The one thing to keep from this slide</p></div>
+    <div class="type type--watchout" role="listitem"><div class="type__tab"><svg class="ic" aria-hidden="true"><use href="#i-watchout"/></svg>Watch out</div><p>A hazard, common mistake, or cost trap</p></div>
+    <div class="type type--hood" role="listitem"><div class="type__tab"><svg class="ic" aria-hidden="true"><use href="#i-hood"/></svg>Under the hood</div><p>Technical depth that non-technical attendees can skip</p></div>
+    <div class="type type--fieldnote" role="listitem"><div class="type__tab"><svg class="ic" aria-hidden="true"><use href="#i-fieldnote"/></svg>Field note</div><p>A real example, story, or observed result</p></div>
+  </div>
+  <ul><li>Syntax: a line <code>&gt; &#91;!TIP]</code>, then the text.</li></ul>
+  <div class="callout callout--tip"><div class="callout__tab"><svg class="ic" aria-hidden="true"><use href="#i-tip"/></svg></div><div class="callout__body"><b class="callout__label">Tip</b><p>One callout per slide at most. When every slide has one, none of them stand out.</p></div></div>
+</section>
+<section>
+  <h3><span class="num">4.2</span>Slide types: quizzes, myths, recaps, activities</h3>
+  <ul>
+    <li><b>Quick check:</b> a question; the answer appears on a click.</li>
+    <li><b>Myth vs fact:</b> common beliefs, each corrected on a click.</li>
+    <li><b>Recap:</b> three points that close a section.</li>
+    <li><b>Try it yourself:</b> steps, time needed, and what you should see, so it works without a presenter.</li>
+  </ul>
+  <aside class="notes">Point out that this talk uses each of these.</aside>
+</section>
+<section>
+  <h3><span class="num">4.3</span>From outline to slide</h3>
+  <iframe class="embed" data-src="examples/field-guide-demo/deck.html" title="The demo deck, live"></iframe>
+  <p class="embed-note">If the frame is blank, open the <a href="examples/field-guide-demo/deck.html" target="_blank" rel="noopener">demo deck</a> in its own tab.</p>
+  <aside class="notes">The frame is the demo deck, live. Click inside it to move through its slides; click outside it to return to this deck. Press S inside it for its speaker view.</aside>
+</section>
+<section class="st-tiy">
+  <div class="tiy"><svg class="ic" aria-hidden="true"><use href="#i-compass"/></svg>Try it yourself</div>
+  <h3><span class="num">4.4</span>Tag one section</h3>
+  <p class="meta">Time: 5 minutes</p>
+  <ol class="trail-steps">
+    <li>Pick one part of a talk you're working on.</li>
+    <li>Write it as <code>## 1. Title</code> with three main points.</li>
+    <li>Add one callout: a tip, a warning, or something to remember.</li>
+    <li>Ask Claude which slide type would suit one detail slide.</li>
+  </ol>
+  <div class="outcome"><b>You should see</b> a section that already reads like a slide, with one tag the deck can render.</div>
+</section>
+<section>
+  <h3><span class="num">4.5</span>Same outline, a different look</h3>
+  <ul>
+    <li>Point <code>BRIEF.md</code> at a different style guide and rebuild. The outline doesn't change.</li>
+    <li>Make your own guide from <code>STYLE-GUIDE-TEMPLATE.md</code>, for example in your team's brand.</li>
+    <li>A tag the style guide doesn't know stops the build and gets reported. Nothing is guessed.</li>
+  </ul>
+</section>
+</section>
