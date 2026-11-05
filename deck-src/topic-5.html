@@ -1,0 +1,37 @@
+<!-- TOPIC 5: Building and checking the deck -->
+<section id="s5">
+<section class="topic" data-background-color="#E6F0EC">
+  <h2><span class="marker">5</span>Building and checking the deck</h2>
+  <ul>
+    <li>Claude builds one self-contained web page you can host: topics run left to right, details go down.</li>
+    <li>Every slide is checked before the deck is called done.</li>
+    <li>Review it in a real browser.</li>
+  </ul>
+  <footer><span>Source: <a href="https://revealjs.com/vertical-slides/">Reveal.js: vertical slides</a></span></footer>
+  <div class="more"><svg class="ic" aria-hidden="true"><use href="#i-down"/></svg>more on this trail</div>
+  <aside class="notes">Keep this short for a mostly non-technical room; the detail is in the slides below.</aside>
+</section>
+<section>
+  <h3><span class="num">5.1</span>Two-dimensional decks</h3>
+  <ul>
+    <li>Reveal.js: horizontal slides for the walk-through, vertical slides for depth.</li>
+    <li>The library loads from a pinned version on cdnjs. The latest listed is 6.0.2.</li>
+    <li>Press S for the speaker view with the notes.</li>
+  </ul>
+  <footer><span class="asof">As of November 5, 2026</span><span>Sources: <a href="https://revealjs.com/vertical-slides/">Reveal.js: vertical slides</a> · <a href="https://cdnjs.com/libraries/reveal.js">cdnjs: reveal.js</a></span></footer>
+</section>
+<section>
+  <h3><span class="num">5.2</span>The check script</h3>
+  <ul><li><code>tools/check-deck.py</code> checks every slide: visible, no overflow, no footer collision, diagrams drawn, no console errors, no leaked tags.</li></ul>
+  <div class="callout callout--watchout"><div class="callout__tab"><svg class="ic" aria-hidden="true"><use href="#i-watchout"/></svg></div><div class="callout__body"><b class="callout__label">Watch out</b><p>Claude's in-chat file preview can't load the deck's libraries, so a correct deck can look broken there. Test in a real browser.</p></div></div>
+</section>
+<section>
+  <h3><span class="num">5.3</span>Other ways to finish</h3>
+  <ul>
+    <li>Claude Slides now works in any conversation (beta on Enterprise plans). The outline-first part works the same whatever builds the deck.</li>
+    <li>This template builds Reveal.js because it gives a two-dimensional deck that can be hosted as one file.</li>
+  </ul>
+  <footer><span class="asof">As of November 5, 2026</span><span>Source: <a href="https://support.claude.com/en/articles/12138966-release-notes">Claude release notes</a></span></footer>
+  <aside class="notes"><span class="tbd">TBD: presenters decide how much to say about Claude Slides</span></aside>
+</section>
+</section>

@@ -1,0 +1,47 @@
+<!-- TOPIC 3: Files, not chat history, carry the work -->
+<section id="s3">
+<section class="topic" data-background-color="#E6F0EC">
+  <h2><span class="marker">3</span>Files, not chat history, carry the work</h2>
+  <ul>
+    <li>A Claude Project holds instructions and knowledge files that every chat in the project uses. Projects are on every plan, including Free (up to five projects).</li>
+    <li>Three files hold the presentation's state: <code>BRIEF.md</code> (the settings), <code>OUTLINE.md</code> (the content), <code>DECISIONS.md</code> (what was agreed).</li>
+    <li>Claude updates the files at checkpoints: a finished section, a decision, an approval, or the end of a chat. <span class="unverified">Unverified</span></li>
+  </ul>
+  <div class="callout callout--remember"><div class="callout__tab"><svg class="ic" aria-hidden="true"><use href="#i-remember"/></svg></div><div class="callout__body"><b class="callout__label">Remember</b><p>If it isn't in a file, the next chat may not know it.</p></div></div>
+  <footer><span class="asof">As of November 5, 2026</span><span>Source: <a href="https://support.claude.com/en/articles/9517075-what-are-projects">What are projects?</a></span></footer>
+  <div class="more"><svg class="ic" aria-hidden="true"><use href="#i-down"/></svg>more on this trail</div>
+  <aside class="notes">Unverified: Anthropic's docs don't describe Claude writing to project knowledge; presenters to confirm the plan and interface where it works.</aside>
+</section>
+<section>
+  <h3><span class="num">3.1</span>The three state files</h3>
+  <div class="cards">
+    <div class="card"><p class="card__name"><svg class="ic" aria-hidden="true"><use href="#i-file"/></svg>BRIEF.md</p><p class="card__tag">"What this talk is"</p><p class="card__text">Topic, audience, date, sources, style. Filled in by an interview in the first chat.</p></div>
+    <div class="card"><p class="card__name"><svg class="ic" aria-hidden="true"><use href="#i-file"/></svg>OUTLINE.md</p><p class="card__tag">"What it says"</p><p class="card__text">Numbered sections, tags, and the time plan. The source of truth for content.</p></div>
+    <div class="card"><p class="card__name"><svg class="ic" aria-hidden="true"><use href="#i-file"/></svg>DECISIONS.md</p><p class="card__tag">"What we agreed"</p><p class="card__text">Dated, one line each, only ever added to.</p></div>
+  </div>
+</section>
+<section class="st-quiz">
+  <p class="st-label"><svg class="ic" aria-hidden="true"><use href="#i-question"/></svg>Quick check</p>
+  <h3><span class="num">3.2</span>What does a new chat know?</h3>
+  <p class="question">You open a new chat in the project. What does Claude reliably have?</p>
+  <div class="options"><div>Everything from your last chat</div><div>The project instructions and files</div><div>Nothing at all</div></div>
+  <div class="answer fragment"><b>Answer:</b> The project instructions and files. Memory and past-chat search can recall parts of earlier chats, but only the files are a reliable record.</div>
+  <footer><span class="asof">As of November 5, 2026</span><span>Source: <a href="https://support.claude.com/en/articles/11817273">Chat search and memory</a></span></footer>
+  <aside class="notes">Pause for answers before revealing.</aside>
+</section>
+<section>
+  <h3><span class="num">3.3</span>When Claude can't write the files</h3>
+  <ul>
+    <li>If a chat can't update the files, Claude ends with "Updates for OUTLINE.md" and "Updates for DECISIONS.md", ready to paste, and says the files weren't updated.</li>
+    <li>To recover, ask a new chat to find that message with past-chat search and apply it. Past-chat search needs a paid plan.</li>
+  </ul>
+  <div class="callout callout--watchout"><div class="callout__tab"><svg class="ic" aria-hidden="true"><use href="#i-watchout"/></svg></div><div class="callout__body"><b class="callout__label">Watch out</b><p>Check the file after Claude says it updated it. File tools can stop working partway through a chat.</p></div></div>
+  <footer><span class="asof">As of November 5, 2026</span><span>Source: <a href="https://support.claude.com/en/articles/11817273">Chat search and memory</a></span></footer>
+</section>
+<section>
+  <h3><span class="num">3.4</span>Large projects</h3>
+  <div class="callout callout--hood"><div class="callout__tab"><svg class="ic" aria-hidden="true"><use href="#i-hood"/></svg></div><div class="callout__body"><b class="callout__label">Under the hood</b><p>On paid plans, when project knowledge nears the context limit, Claude switches to retrieval automatically and can hold up to about 10 times more.</p></div></div>
+  <ul><li>Condense long seed files first: a short header, the content as an outline, and your own comments kept separate.</li></ul>
+  <footer><span class="asof">As of November 5, 2026</span><span>Source: <a href="https://support.claude.com/en/articles/11473015-retrieval-augmented-generation-rag-for-projects">RAG for projects</a></span></footer>
+</section>
+</section>
