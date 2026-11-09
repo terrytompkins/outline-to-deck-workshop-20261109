@@ -1,6 +1,6 @@
 # DECISIONS
 
-<!-- status: revision 4 | phase 2 (test) | last written 2026-11-05 -->
+<!-- status: revision 5 | phase 2 (test) | last written 2026-11-08 -->
 
 A dated log of decisions about scope, audience, content, and design. Respect every *Decided* entry; if a request conflicts with one, say so before proceeding.
 
@@ -31,6 +31,7 @@ A dated log of decisions about scope, audience, content, and design. Respect eve
 - 2026-11-05 · Decided · Outline v0.2: 4.3 shows the demo deck in a live frame, with a text fallback (test branch only).
 
 ## Style and design
+- 2026-11-08 · Decided · Style: Toons (STYLE-TOONS.md), an original cartoon look with no studio characters or logos; built as outline-first-toons.html on branch test/style-toons (test branch only).
 
 ## Facts to present
 Confirmed facts the presenter supplied (internal settings, dates, numbers), so later chats don't ask again.
