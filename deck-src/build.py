@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Assemble outline-first-toons.html from the fragments in this folder (Toons style).
+"""Assemble outline-first.html from the fragments in this folder.
 
 DECK-BUILD-SPEC.md section 5: a shared head (CSS, icons) and tail (scripts),
 plus one HTML fragment for each topic. To regenerate one section, replace its
@@ -18,7 +18,7 @@ import re
 import sys
 
 SRC = pathlib.Path(__file__).resolve().parent
-OUT = SRC.parent / "outline-first-toons.html"
+OUT = SRC.parent / "outline-first.html"
 
 # Live order from the OUTLINE.md time plan.
 TOPIC_ORDER = [1, 2, 3, 4, 5, 6, 7]

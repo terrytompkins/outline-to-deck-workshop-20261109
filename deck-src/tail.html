@@ -28,7 +28,7 @@ function fitSlide(s){
   function tooTall(){
     if (s.scrollHeight > s.clientHeight + 2) return true;
     var ft = s.querySelector(':scope > footer');
-    var limit = ft ? ft.offsetTop - 14 : s.clientHeight - 72;
+    var limit = ft ? ft.offsetTop - 6 : s.clientHeight - 64;
     var kids = s.querySelectorAll(':scope > *:not(footer):not(aside):not(.pgnum):not(.more):not(.tiy):not(.chrome)');
     for (var i = 0; i < kids.length; i++){ if (kids[i].offsetTop + kids[i].offsetHeight > limit) return true; }
     return false;
@@ -43,9 +43,9 @@ if (window.mermaid) {
     // SVG labels: HTML labels are measured after Reveal scales the slide, so their text is clipped.
     flowchart: { curve: 'basis', htmlLabels: false, useMaxWidth: true, nodeSpacing: 34, rankSpacing: 60, padding: 14 },
     themeVariables: {
-      fontFamily: '"Avenir Next", "Segoe UI", system-ui, sans-serif', fontSize: '20px',
-      primaryColor: '#FFFFFF', primaryBorderColor: '#1A1A1A', primaryTextColor: '#1A1A1A',
-      lineColor: '#1A1A1A', edgeLabelBackground: '#FFFFFF'
+      fontFamily: '"Avenir Next", Avenir, "Segoe UI", system-ui, sans-serif', fontSize: '20px',
+      primaryColor: '#FFFFFF', primaryBorderColor: '#1F5C4F', primaryTextColor: '#1E2B2E',
+      lineColor: '#5C6B67', edgeLabelBackground: '#FFFFFF'
     }
   });
 }
