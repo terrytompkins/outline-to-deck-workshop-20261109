@@ -1,0 +1,405 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Outline First: workshop introduction</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/reset.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/reveal.min.css">
+<style>
+/* Field Guide style: tokens from STYLE-FIELD-GUIDE.md */
+:root{
+  --ink:#1E2B2E; --spruce:#1F5C4F; --spruce-deep:#16443A; --moss:#E6F0EC; --surface:#FFFFFF;
+  --line:#D5DDD9; --caption:#5C6B67;
+  --sun:#E0A21B; --sun-tint:#FDF3DC; --sky:#2F6F9F; --sky-tint:#E4EEF6;
+  --signal:#C8501F; --signal-tint:#FBE6DD; --slate:#4B5563; --slate-tint:#EEF0F3;
+  --fern:#3E7D3A; --fern-tint:#E7F2E4;
+  --font:"Avenir Next",Avenir,"Segoe UI",system-ui,-apple-system,sans-serif;
+  --mono:ui-monospace,Menlo,Consolas,"Liberation Mono",monospace;
+  --r-background-color:var(--surface); --r-main-color:var(--ink); --r-heading-color:var(--ink);
+  --r-main-font:var(--font); --r-heading-font:var(--font); --r-main-font-size:34px;
+  --r-link-color:var(--spruce); --r-link-color-hover:var(--spruce-deep);
+}
+.reveal{font-family:var(--font);color:var(--ink);font-size:34px}
+.reveal .slides{text-align:left}
+/* Never set position on sections (DECK-BUILD-SPEC §4.1). Children are positioned absolutely. */
+.reveal .slides section{height:100%;box-sizing:border-box;padding:40px 56px 72px}
+.reveal .slides>section.stack{padding:0}
+
+/* Type */
+.reveal h1,.reveal h2,.reveal h3{font-family:var(--font);text-transform:none;letter-spacing:-.01em;color:var(--ink);font-weight:700}
+.reveal h1{font-size:2.1em;line-height:1.1;margin:0 0 .4em;color:#fff;max-width:15em}
+.reveal h2{font-size:1.32em;line-height:1.18;margin:0 0 .6em;display:flex;align-items:center}
+.reveal h3{font-size:1.05em;line-height:1.25;margin:0 0 .6em;display:flex;align-items:center}
+.reveal p{font-size:.7em;line-height:1.45;margin:.35em 0}
+.reveal ul,.reveal ol{display:block;margin:0 0 0 1.1em;font-size:.7em;line-height:1.45}
+.reveal li{margin:.35em 0}
+.reveal ul{list-style:none;margin-left:.2em}
+.reveal ul>li{position:relative;padding-left:1.1em}
+.reveal ul>li::before{content:"";position:absolute;left:0;top:.5em;width:.42em;height:.42em;border-radius:50%;border:2px solid var(--spruce)}
+.reveal ol>li::marker{color:var(--spruce);font-weight:700}
+.reveal code{font-family:var(--mono);font-size:.88em;background:var(--moss);padding:.05em .3em;border-radius:3px}
+.reveal .topic code{background:#fff}
+.reveal a{color:var(--spruce);border-bottom:1px solid currentColor;text-decoration:none}
+.reveal em{font-style:italic}
+
+/* Trail marker (top-level) and number chip (vertical) */
+.reveal .marker{flex:none;display:inline-flex;align-items:center;justify-content:center;min-width:1.6em;height:1.6em;padding:0 .25em .18em;margin-right:.55em;background:var(--spruce);color:#fff;font-size:.8em;font-weight:700;border-radius:6px;clip-path:polygon(0 0,100% 0,100% 88%,62% 88%,50% 100%,38% 88%,0 88%);box-sizing:border-box}
+.reveal .num{flex:none;display:inline-block;min-width:1.7em;padding:0 .35em;margin-right:.55em;border-radius:5px;background:var(--moss);color:var(--spruce);font-size:.62em;font-weight:700;line-height:1.75;text-align:center}
+
+/* Cover */
+/* Reveal sets display:block on the current slide, so the cover is positioned with padding, not flexbox. */
+.reveal .slides section.cover{padding:200px 140px 72px 96px}
+.reveal .cover .contours{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.reveal .cover .series{font-size:.7em;color:var(--moss);font-weight:700;margin:0 0 1em;position:relative}
+.reveal .cover h1,.reveal .cover .lead{position:relative}
+.reveal .cover .lead{color:#CFE3DB;font-size:.86em;max-width:26em}
+
+/* Agenda */
+.reveal .trails{list-style:none;margin:.4em 0 0;font-size:.8em;display:grid;gap:.55em}
+.reveal .trails li{margin:0}
+.reveal .trails a{display:flex;align-items:center;color:var(--ink);border:none;padding:.35em .5em;border-radius:8px}
+.reveal .trails a:hover{background:var(--moss)}
+.reveal .trails .marker{font-size:.9em}
+
+/* Footer, page number, more cue */
+.reveal footer{position:absolute;left:56px;right:240px;bottom:22px;font-size:14px;color:var(--caption);display:flex;flex-wrap:wrap;gap:.2em 1.4em;line-height:1.5}
+.reveal footer .asof{color:var(--spruce);font-weight:700;white-space:nowrap}
+.reveal footer a{color:var(--caption);border-bottom:1px dotted var(--caption)}
+.reveal .pgnum{position:absolute;right:120px;bottom:22px;font-size:14px;color:var(--caption);font-variant-numeric:tabular-nums}
+.reveal .more{position:absolute;top:30px;right:56px;display:flex;align-items:center;gap:6px;font-size:14px;font-weight:700;color:var(--spruce)}
+.reveal .more .ic{width:16px;height:16px}
+
+/* Icons */
+.reveal .ic{width:1em;height:1em;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none}
+
+/* Content markers */
+.reveal .tbd{display:inline-block;font-size:.85em;color:var(--signal);background:var(--signal-tint);border:1.5px dashed var(--signal);border-radius:5px;padding:0 .4em;font-weight:700}
+.reveal .unverified{display:inline-block;font-size:.72em;color:var(--slate);background:var(--slate-tint);border-radius:999px;padding:.05em .6em;vertical-align:.1em;font-weight:700}
+
+/* Callouts: colored tab with icon, tinted body */
+.reveal .callout{display:flex;align-items:stretch;margin:.8em 0 0;border-radius:10px;overflow:hidden;font-size:1em}
+.reveal .callout__tab{display:flex;align-items:center;justify-content:center;width:62px;flex:none;color:#fff}
+.reveal .callout__tab .ic{width:30px;height:30px}
+.reveal .callout__body{padding:.5em .9em .55em;flex:1}
+.reveal .callout__label{display:block;font-size:.62em;margin-bottom:.1em}
+.reveal .callout__body p{font-size:.66em;margin:0}
+.reveal .callout--tip .callout__tab{background:var(--sun);color:var(--ink)}
+.reveal .callout--tip .callout__body{background:var(--sun-tint)} .reveal .callout--tip .callout__label{color:#8A5F00}
+.reveal .callout--remember .callout__tab{background:var(--sky)}
+.reveal .callout--remember .callout__body{background:var(--sky-tint)} .reveal .callout--remember .callout__label{color:var(--sky)}
+.reveal .callout--watchout .callout__tab{background:var(--signal)}
+.reveal .callout--watchout .callout__body{background:var(--signal-tint)} .reveal .callout--watchout .callout__label{color:#A33F15}
+.reveal .callout--hood .callout__tab{background:var(--slate)}
+.reveal .callout--hood .callout__body{background:var(--slate-tint)} .reveal .callout--hood .callout__label{color:var(--slate)}
+.reveal .callout--fieldnote .callout__tab{background:var(--fern)}
+.reveal .callout--fieldnote .callout__body{background:var(--fern-tint)} .reveal .callout--fieldnote .callout__label{color:var(--fern)}
+.reveal .topic .callout__body{background:#fff}
+
+/* Slide-type label */
+.reveal .st-label{display:flex;align-items:center;gap:.4em;font-size:.5em;font-weight:700;margin:0 0 .5em;color:var(--sky)}
+.reveal .st-label .ic{width:1.3em;height:1.3em}
+
+/* Quick check */
+.reveal .question{font-size:.9em;line-height:1.3;font-weight:700;margin:.2em 0 .7em;max-width:24em}
+.reveal .options{display:grid;grid-template-columns:repeat(3,1fr);gap:.6em;font-size:.62em}
+.reveal .options>div{border:2px solid var(--line);border-radius:10px;padding:.6em .8em}
+.reveal .answer{font-size:.66em;background:var(--sky-tint);border-radius:10px;padding:.7em .9em;margin-top:.9em}
+.reveal .answer b{color:var(--sky)}
+
+/* Myth vs fact */
+.reveal .st-myth .st-label{color:var(--signal)}
+.reveal .myths{display:grid;grid-template-columns:1fr 1fr;gap:.6em 1em}
+.reveal .myth,.reveal .fact{display:flex;gap:.6em;align-items:flex-start;border-radius:10px;padding:.6em .8em}
+.reveal .myth{background:var(--signal-tint);color:#7A2E0E}
+.reveal .fact{background:var(--fern-tint)}
+.reveal .myth .ic{color:var(--signal);width:1.1em;height:1.1em;margin-top:.15em}
+.reveal .fact .ic{color:var(--fern);width:1.1em;height:1.1em;margin-top:.15em}
+.reveal .myth p,.reveal .fact p{margin:0;font-size:.64em}
+.reveal .myth p{font-weight:700}
+
+/* Recap */
+.reveal .st-recap .st-label{color:var(--fern)}
+.reveal ul.checks{margin:.2em 0 0}
+.reveal ul.checks>li{padding-left:1.6em;font-size:1.1em;margin:.55em 0}
+.reveal ul.checks>li::before{display:none}
+.reveal ul.checks .ic{position:absolute;left:0;top:.2em;width:1.05em;height:1.05em;color:var(--fern);stroke-width:2.8}
+.reveal .next{position:absolute;left:56px;bottom:56px;font-size:17px;color:var(--caption);font-weight:700}
+
+/* Try it yourself */
+.reveal .tiy{position:absolute;top:22px;right:40px;display:flex;align-items:center;gap:.4em;background:var(--spruce);color:#fff;font-size:16px;font-weight:700;padding:.4em .95em;border-radius:999px}
+.reveal .tiy .ic{width:1.2em;height:1.2em}
+.reveal .meta{font-size:.6em;color:var(--caption);margin:-.3em 0 .6em}
+.reveal ol.trail-steps{list-style:none;counter-reset:step;margin:0;font-size:.66em}
+.reveal ol.trail-steps>li{counter-increment:step;position:relative;padding:0 0 .55em 2.3em;margin:0}
+.reveal ol.trail-steps>li::before{content:counter(step);position:absolute;left:0;top:-.05em;width:1.6em;height:1.6em;border-radius:50%;background:var(--spruce);color:#fff;font-weight:700;font-size:.85em;display:flex;align-items:center;justify-content:center}
+.reveal ol.trail-steps>li:not(:last-child)::after{content:"";position:absolute;left:.66em;top:1.45em;bottom:.1em;width:2px;background:var(--line)}
+.reveal .outcome{font-size:.64em;background:var(--fern-tint);border-radius:10px;padding:.65em .9em;margin-top:.5em}
+.reveal .outcome b{color:var(--fern);margin-right:.3em}
+
+/* Tables, code, figures */
+.reveal table{font-size:.58em;border-collapse:collapse;width:100%}
+.reveal th,.reveal td{text-align:left;padding:.42em .8em .42em .3em;border-bottom:1px solid var(--line);vertical-align:top}
+.reveal th{color:var(--spruce);border-bottom:2px solid var(--spruce)}
+.reveal pre.code{box-shadow:none;width:100%;margin:.2em 0 .6em;font-size:.56em}
+.reveal pre.code code{display:block;background:var(--ink);color:#E6F0EC;padding:.8em 1em;border-radius:10px;max-height:none;line-height:1.5}
+.reveal figure{margin:.3em 0 0}
+.reveal figure svg{width:100%;height:auto;display:block;max-height:400px}
+.reveal figcaption{font-size:.42em;color:var(--caption);margin-top:.2em}
+.reveal .t-ink{fill:var(--ink);font-family:var(--font)} .reveal .t-cap{fill:var(--caption);font-family:var(--font)}
+.reveal .t-spruce{fill:var(--spruce);font-family:var(--font)} .reveal .t-signal{fill:var(--signal);font-family:var(--font)}
+
+/* Mermaid: hidden until rendered */
+.reveal .diagram{text-align:center;margin:.2em 0 0}
+.reveal pre.mermaid{box-shadow:none;background:none;width:100%;margin:0;font-size:20px;text-align:center;white-space:pre}
+.reveal pre.mermaid:not([data-processed]){visibility:hidden;height:0;overflow:hidden}
+.reveal pre.mermaid svg{max-width:100%!important;height:auto;max-height:300px}
+
+.reveal .controls{color:var(--spruce)}
+.reveal .progress{color:var(--spruce);height:4px}
+
+/* Intro deck additions */
+#s3 pre.mermaid svg{max-height:330px}
+#s3 .diagram{margin-top:.6em}
+.reveal .slides section.cover{padding:150px 120px 72px 96px}
+.reveal .cover h1{font-size:1.9em;max-width:16em}
+.reveal .today{list-style:none;margin:1.2em 0 0;padding:0;display:flex;flex-wrap:wrap;gap:.5em 1.6em;font-size:.6em;color:#CFE3DB;position:relative}
+.reveal .today li{display:flex;align-items:center;margin:0}
+.reveal .today span{display:inline-flex;align-items:center;justify-content:center;width:1.6em;height:1.6em;margin-right:.45em;border-radius:5px;background:#E6F0EC;color:#16443A;font-weight:700;font-size:.85em}
+.reveal .split2{display:grid;grid-template-columns:1.05fr .95fr;gap:0 1.4em;align-items:center}
+.reveal .split2--wide-left{grid-template-columns:.95fr 1.05fr}
+.reveal .split2>*{min-width:0}
+.reveal .split2 ul{font-size:.66em}
+.reveal .split2 ul li{margin:.5em 0}
+.reveal .split2 figure svg{max-height:330px}
+.reveal .callout{margin-top:.5em}
+.reveal ul.tight{font-size:.6em;margin-top:.3em}
+.reveal ul.tight li{margin:.25em 0}
+.reveal .t-white{fill:#fff;font-family:var(--font)}
+.reveal .t-fern{fill:#3E7D3A;font-family:var(--font)}
+.reveal .phases{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.8em;margin-top:.8em;font-size:.58em}
+.reveal .phases>div{background:#fff;border-radius:10px;padding:.6em .8em}
+.reveal .phases b{display:block;color:var(--spruce);margin-bottom:.2em}
+.reveal .phases .gate b{color:#8A5F00}
+.reveal .phases span{line-height:1.4}
+.reveal .tagmap{display:grid;grid-template-columns:1fr 50px 1fr;gap:0 .6em;align-items:start}
+.reveal .tagmap>*{min-width:0}
+.reveal .col-label{font-size:.48em;font-weight:700;color:var(--caption);text-transform:uppercase;letter-spacing:.04em;margin:0 0 .4em}
+.reveal .tagmap pre.code{font-size:.5em;margin:0}
+.reveal .tagmap .arrow{display:flex;align-items:center;justify-content:center;height:100%;color:var(--spruce)}
+.reveal .tagmap .arrow .ic{width:40px;height:40px}
+.reveal ul.renders{margin:0;font-size:.56em}
+.reveal ul.renders>li{padding-left:0;margin:0 0 .55em}
+.reveal ul.renders>li::before{display:none}
+.reveal ul.renders .callout{margin:0;font-size:1em}
+.reveal ul.renders .callout__label{font-size:.85em}
+.reveal ul.renders .callout__body p{font-size:1em}
+.reveal ul.renders .callout__tab{width:48px}
+.reveal ul.renders .callout__tab .ic{width:24px;height:24px}
+.reveal .muted{color:var(--caption)}
+.reveal .mini-quiz{display:inline-flex;align-items:center;gap:.4em;background:var(--sky-tint);color:var(--sky);font-weight:700;border-radius:8px;padding:.3em .7em}
+.reveal .mini-quiz .ic{width:1.2em;height:1.2em}
+.reveal .swap{font-size:.6em;margin-top:.6em}
+.reveal .topic .swap code{background:#fff}
+.reveal .next a{color:var(--spruce)}
+.reveal .tbd{font-size:1em}
+
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+<symbol id="i-tip" viewBox="0 0 24 24"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.6 10.8c.7.6 1.1 1.4 1.1 2.2h5c0-.8.4-1.6 1.1-2.2A6 6 0 0 0 12 3z"/></symbol>
+<symbol id="i-remember" viewBox="0 0 24 24"><path d="M6 3h12v18l-6-4-6 4z"/></symbol>
+<symbol id="i-watchout" viewBox="0 0 24 24"><path d="M12 3l10 18H2z"/><path d="M12 10v5M12 18v.5"/></symbol>
+<symbol id="i-hood" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1L7 17M17 7l2.1-2.1"/></symbol>
+<symbol id="i-question" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .9-1 1.6v.6M12 17v.5"/></symbol>
+<symbol id="i-arrow" viewBox="0 0 24 24"><path d="M4 12h15M13 6l6 6-6 6"/></symbol>
+<symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></symbol>
+</svg>
+<div class="reveal">
+<div class="slides">
+
+<!-- TITLE -->
+<section id="title" class="cover" data-background-color="#16443A">
+  <svg class="contours chrome" viewBox="0 0 1280 720" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><g fill="none" stroke="#FFFFFF" stroke-opacity=".09" stroke-width="2"><path d="M1139.0,155.5 C1134.3,162.7 1118.9,169.9 1107.1,172.8 C1095.2,175.7 1081.4,174.1 1067.8,172.9 C1054.2,171.7 1032.2,171.4 1025.3,165.7 C1018.3,159.9 1024.3,146.8 1026.0,138.3 C1027.8,129.8 1028.3,120.9 1036.0,114.6 C1043.7,108.4 1059.6,101.7 1072.2,100.9 C1084.8,100.1 1101.0,105.0 1111.5,109.8 C1122.0,114.6 1130.6,121.9 1135.2,129.5 C1139.7,137.1 1143.7,148.2 1139.0,155.5Z"/><path d="M1173.5,168.0 C1164.4,179.5 1139.2,190.3 1119.5,194.5 C1099.9,198.7 1077.9,195.8 1055.7,193.3 C1033.5,190.8 996.5,189.3 986.3,179.5 C976.0,169.7 990.2,148.5 994.3,134.6 C998.4,120.7 998.0,106.0 1010.9,96.0 C1023.9,86.0 1051.8,75.1 1072.2,74.8 C1092.7,74.5 1116.5,85.6 1133.4,94.0 C1150.4,102.4 1167.4,112.9 1174.1,125.2 C1180.8,137.6 1182.6,156.5 1173.5,168.0Z"/><path d="M1205.0,182.3 C1190.2,197.9 1155.7,211.2 1128.2,216.5 C1100.7,221.7 1070.3,218.1 1039.8,213.8 C1009.3,209.5 957.8,205.0 945.2,190.9 C932.6,176.8 956.9,148.3 964.1,129.1 C971.3,109.8 969.7,89.0 988.4,75.5 C1007.1,62.0 1048.6,47.0 1076.5,47.9 C1104.4,48.9 1132.7,68.5 1156.0,81.0 C1179.4,93.6 1208.6,106.1 1216.8,123.0 C1224.9,139.9 1219.7,166.8 1205.0,182.3Z"/><path d="M1232.9,198.1 C1211.1,217.3 1168.6,232.3 1133.1,238.5 C1097.6,244.6 1058.0,241.3 1019.8,234.7 C981.5,228.2 917.7,218.2 903.5,199.4 C889.3,180.5 923.9,146.0 934.8,121.7 C945.6,97.3 943.6,70.0 968.7,53.2 C993.7,36.3 1050.1,17.7 1085.1,20.7 C1120.1,23.6 1149.1,53.7 1178.8,70.8 C1208.6,87.8 1254.4,101.8 1263.4,123.0 C1272.4,144.3 1254.6,178.9 1232.9,198.1Z"/><path d="M1256.8,215.0 C1226.9,237.4 1177.9,253.3 1134.2,260.2 C1090.5,267.1 1040.1,265.7 994.9,256.5 C949.6,247.2 877.7,228.6 862.9,204.6 C848.0,180.5 890.8,141.5 905.7,112.3 C920.5,83.1 919.9,49.0 952.0,29.3 C984.1,9.5 1056.5,-12.0 1098.1,-6.4 C1139.7,-0.8 1165.8,40.9 1201.7,62.9 C1237.7,84.9 1304.6,100.4 1313.7,125.7 C1322.9,151.1 1286.7,192.6 1256.8,215.0Z"/><path d="M1276.8,232.7 C1237.5,257.7 1183.7,273.7 1131.6,281.4 C1079.6,289.1 1015.6,291.7 964.5,279.1 C913.3,266.6 839.8,236.1 825.0,206.3 C810.3,176.6 857.0,134.5 876.0,100.7 C894.9,67.0 898.8,26.1 938.7,3.9 C978.6,-18.3 1067.6,-41.3 1115.4,-32.5 C1163.1,-23.7 1183.1,29.5 1225.0,56.8 C1267.0,84.2 1358.4,102.1 1367.0,131.4 C1375.6,160.7 1316.0,207.7 1276.8,232.7Z"/><path d="M1292.8,251.1 C1243.4,278.0 1186.4,293.4 1125.6,302.0 C1064.7,310.6 983.5,318.9 927.9,302.7 C872.2,286.4 805.4,240.7 791.6,204.7 C777.8,168.7 822.1,124.6 845.0,86.7 C867.9,48.7 880.5,1.1 929.1,-22.8 C977.7,-46.7 1083.2,-69.3 1136.6,-56.8 C1190.0,-44.4 1202.1,19.2 1249.6,52.1 C1297.2,85.0 1414.7,107.2 1421.9,140.4 C1429.1,173.6 1342.2,224.2 1292.8,251.1Z"/><path d="M1305.1,270.0 C1245.0,298.2 1186.2,312.5 1116.2,321.9 C1046.1,331.3 943.4,347.0 884.7,326.7 C826.0,306.4 775.9,242.9 763.8,200.0 C751.7,157.2 785.7,111.4 812.3,69.6 C838.9,27.9 865.1,-25.8 923.2,-50.5 C981.4,-75.2 1102.3,-94.9 1161.2,-78.5 C1220.1,-62.1 1224.1,9.4 1276.7,48.0 C1329.3,86.5 1472.0,115.8 1476.8,152.8 C1481.5,189.8 1365.2,241.8 1305.1,270.0Z"/><path d="M1314.2,289.5 C1243.2,318.3 1183.5,331.1 1103.6,341.3 C1023.7,351.4 895.0,375.2 834.8,350.5 C774.6,325.7 751.9,243.0 742.4,192.8 C732.9,142.6 748.0,94.6 777.8,49.3 C807.6,3.9 853.0,-54.8 921.4,-79.2 C989.8,-103.5 1123.9,-117.2 1188.3,-96.7 C1252.7,-76.2 1251.2,-0.2 1308.1,44.0 C1364.9,88.2 1528.4,127.6 1529.4,168.5 C1530.4,209.4 1385.1,260.7 1314.2,289.5Z"/><path d="M138.2,730.7 C124.1,733.6 104.0,734.3 90.1,730.7 C76.2,727.2 59.8,717.8 54.5,709.4 C49.3,701.0 55.1,689.7 58.7,680.2 C62.3,670.6 65.2,657.8 76.3,652.1 C87.5,646.3 111.1,643.9 125.6,645.7 C140.1,647.5 151.2,656.0 163.4,662.6 C175.5,669.2 196.4,676.9 198.3,685.3 C200.2,693.8 184.8,705.8 174.8,713.3 C164.8,720.9 152.3,727.8 138.2,730.7Z"/><path d="M143.1,753.8 C121.2,758.0 88.4,758.9 67.8,752.6 C47.2,746.3 26.7,729.5 19.6,716.0 C12.5,702.5 18.9,686.1 25.2,671.6 C31.5,657.2 39.1,637.5 57.3,629.3 C75.4,621.1 112.1,618.8 134.1,622.3 C156.1,625.8 170.9,639.7 189.3,650.4 C207.7,661.1 242.6,673.6 244.3,686.4 C246.0,699.3 216.2,716.3 199.3,727.5 C182.5,738.8 165.0,749.6 143.1,753.8Z"/><path d="M144.3,777.4 C114.4,782.7 67.2,783.8 40.9,774.2 C14.6,764.6 -5.1,738.7 -13.4,719.8 C-21.8,700.8 -18.5,679.5 -9.2,660.5 C0.0,641.5 16.2,615.7 42.1,605.6 C68.0,595.5 117.0,594.1 146.2,599.8 C175.4,605.5 193.2,624.6 217.4,639.7 C241.6,654.8 291.0,673.3 291.5,690.4 C292.0,707.5 244.8,728.0 220.3,742.6 C195.7,757.1 174.2,772.2 144.3,777.4Z"/><path d="M141.8,801.6 C103.8,807.7 40.3,808.8 9.4,795.3 C-21.5,781.9 -34.5,745.7 -43.5,720.8 C-52.6,696.0 -57.5,669.7 -45.1,646.4 C-32.6,623.1 -3.5,592.6 31.0,581.3 C65.4,570.0 125.5,570.6 161.7,578.7 C197.9,586.9 218.9,610.5 248.3,630.2 C277.8,650.0 340.3,675.9 338.5,697.3 C336.8,718.6 270.7,741.0 237.9,758.3 C205.1,775.7 179.9,795.4 141.8,801.6Z"/><path d="M135.6,826.0 C89.0,832.8 7.6,833.2 -26.7,815.5 C-61.0,797.7 -61.0,750.6 -70.3,719.5 C-79.6,688.5 -98.1,656.1 -82.3,629.0 C-66.6,601.9 -19.6,568.5 24.2,556.9 C67.9,545.3 137.0,548.6 180.2,559.4 C223.3,570.2 249.2,597.0 283.1,621.6 C317.0,646.2 388.7,681.5 383.6,707.0 C378.6,732.6 294.0,755.2 252.7,775.0 C211.4,794.9 182.1,819.3 135.6,826.0Z"/><path d="M125.4,850.7 C70.0,857.6 -30.4,856.5 -66.9,834.1 C-103.4,811.7 -84.8,753.9 -93.7,716.2 C-102.7,678.5 -139.9,638.5 -120.7,607.9 C-101.4,577.4 -31.9,543.8 21.7,532.8 C75.3,521.8 151.0,528.7 201.2,542.2 C251.4,555.7 285.5,584.4 322.8,613.9 C360.1,643.4 434.6,689.5 425.0,719.3 C415.4,749.1 315.2,771.0 265.2,792.9 C215.3,814.8 180.7,843.8 125.4,850.7Z"/><path d="M111.3,875.5 C46.9,881.9 -72.8,877.9 -110.4,850.5 C-148.0,823.1 -106.3,755.8 -114.4,711.3 C-122.5,666.7 -182.2,616.8 -159.3,583.2 C-136.3,549.5 -40.5,518.6 23.5,509.3 C87.4,500.0 166.8,511.0 224.3,527.3 C281.8,543.6 329.0,572.6 368.4,607.0 C407.8,641.4 476.1,699.4 460.7,733.6 C445.3,767.9 334.2,788.7 276.0,812.3 C217.7,836.0 175.7,869.1 111.3,875.5Z"/><path d="M93.1,900.3 C19.5,905.4 -118.4,896.6 -156.2,864.0 C-193.9,831.5 -126.8,756.6 -133.6,705.0 C-140.4,653.5 -224.1,591.2 -196.9,554.8 C-169.8,518.4 -45.1,493.2 29.3,486.6 C103.6,479.9 183.7,495.8 249.0,514.9 C314.2,534.0 380.8,562.1 420.8,601.2 C460.9,640.3 511.8,710.6 489.2,749.4 C466.7,788.1 351.3,808.7 285.3,833.9 C219.3,859.0 166.6,895.3 93.1,900.3Z"/></g></svg>
+  <p class="series">Workshop · November 9, 2026</p>
+  <h1>Outline First: How to Get Claude to Build the Deck You Actually Want</h1>
+  <ol class="today">
+    <li><span>1</span>Why two phases</li><li><span>2</span>Why Reveal.js</li><li><span>3</span>The process</li>
+    <li><span>4</span>A Claude Project as the workspace</li><li><span>5</span>Tags drive the deck</li>
+  </ol>
+  <aside class="notes">Five short slides to set up the workshop: why we work this way, why the output is Reveal.js, what the process looks like, how a Claude Project holds it together, and how tags in the outline control the slides. This deck uses the same Field Guide style the workshop template ships with.</aside>
+</section>
+<!-- TOPIC 1: Why two phases -->
+<section id="s1" class="topic" data-background-color="#E6F0EC">
+  <h2><span class="marker">1</span>Why not just ask Claude for the deck?</h2>
+  <div class="split2">
+    <ul>
+      <li>Diving in means revising the deck itself, and every change has Claude re-read and rewrite a heavy file.</li>
+      <li>In a long chat, everything earlier is resent with each new message, so a big deck makes every later turn cost more.</li>
+      <li>A text outline is a fraction of the size: cheap to revise, cheap to re-read, easy for you to review.</li>
+    </ul>
+    <figure><svg viewBox="0 0 560 330" role="img" aria-label="Illustrative chart: rebuilding the deck on every revision adds up quickly; revising a text outline and building once stays low">
+<line x1="56" y1="262" x2="540" y2="262" stroke="#D5DDD9" stroke-width="2"/>
+<path d="M56,225 L135,188 L214,150 L293,113 L372,76 L451,39 L530,39" fill="none" stroke="#C8501F" stroke-width="5" stroke-linejoin="round"/>
+<path d="M56,262 L135,258 L214,255 L293,251 L372,247 L451,243 L530,202" fill="none" stroke="#1F5C4F" stroke-width="5" stroke-linejoin="round"/>
+<circle cx="530" cy="202" r="7" fill="#1F5C4F"/>
+<text x="518" y="188" text-anchor="end" class="t-ink" font-size="17" font-weight="700">one build</text>
+<text x="279" y="91" text-anchor="end" class="t-signal" font-size="18" font-weight="700">Rebuild the deck</text>
+<text x="279" y="113.25" text-anchor="end" class="t-signal" font-size="18" font-weight="700">each time</text>
+<text x="293" y="235" text-anchor="middle" class="t-spruce" font-size="18" font-weight="700">Revise the outline</text>
+<text x="56" y="286" text-anchor="middle" class="t-cap" font-size="16">0</text><text x="135" y="286" text-anchor="middle" class="t-cap" font-size="16">1</text><text x="214" y="286" text-anchor="middle" class="t-cap" font-size="16">2</text><text x="293" y="286" text-anchor="middle" class="t-cap" font-size="16">3</text><text x="372" y="286" text-anchor="middle" class="t-cap" font-size="16">4</text><text x="451" y="286" text-anchor="middle" class="t-cap" font-size="16">5</text><text x="530" y="286" text-anchor="middle" class="t-cap" font-size="16">6</text>
+<text x="298" y="312" text-anchor="middle" class="t-cap" font-size="16">Revision</text>
+<text x="20" y="143" transform="rotate(-90 20 143)" text-anchor="middle" class="t-cap" font-size="16">Cumulative tokens</text>
+</svg><figcaption>Illustrative shape, not measured data.</figcaption></figure>
+  </div>
+  <div class="callout callout--remember"><div class="callout__tab"><svg class="ic" aria-hidden="true"><use href="#i-remember"/></svg></div><div class="callout__body"><b class="callout__label">Remember</b><p>Get the content right in text first. Generate the deck once.</p></div></div>
+  <aside class="notes">Ask how many people have asked for a deck, then spent the next hour asking for changes to it. Each of those changes paid for the whole deck again. The chart is a shape, not a measurement: the point is that rebuilds add up while outline edits stay small.</aside>
+</section>
+<!-- TOPIC 2: Why Reveal.js -->
+<section id="s2" class="topic" data-background-color="#E6F0EC">
+  <h2><span class="marker">2</span>Why Reveal.js?</h2>
+  <div class="split2 split2--wide-left">
+    <figure><svg viewBox="0 0 600 400" role="img" aria-label="A Reveal.js deck as a grid: four topic slides across the top, each with a column of detail slides beneath it"><defs><marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#5C6B67"/></marker></defs><rect x="70" y="64" width="88" height="52" rx="6" fill="#1F5C4F"/><text x="114.0" y="97" text-anchor="middle" class="t-white" font-size="20" font-weight="700">1</text><rect x="70" y="132" width="88" height="52" rx="6" fill="#FFFFFF" stroke="#1F5C4F" stroke-width="2"/><text x="114.0" y="164" text-anchor="middle" class="t-spruce" font-size="16" font-weight="700">1.1</text><rect x="70" y="200" width="88" height="52" rx="6" fill="#FFFFFF" stroke="#1F5C4F" stroke-width="2"/><text x="114.0" y="232" text-anchor="middle" class="t-spruce" font-size="16" font-weight="700">1.2</text><rect x="70" y="268" width="88" height="52" rx="6" fill="#FFFFFF" stroke="#1F5C4F" stroke-width="2"/><text x="114.0" y="300" text-anchor="middle" class="t-spruce" font-size="16" font-weight="700">1.3</text><path d="M162 90.0 h18" stroke="#5C6B67" stroke-width="2.5" marker-end="url(#ah)"/><rect x="184" y="64" width="88" height="52" rx="6" fill="#1F5C4F"/><text x="228.0" y="97" text-anchor="middle" class="t-white" font-size="20" font-weight="700">2</text><rect x="184" y="132" width="88" height="52" rx="6" fill="#FFFFFF" stroke="#1F5C4F" stroke-width="2"/><text x="228.0" y="164" text-anchor="middle" class="t-spruce" font-size="16" font-weight="700">2.1</text><rect x="184" y="200" width="88" height="52" rx="6" fill="#FFFFFF" stroke="#1F5C4F" stroke-width="2"/><text x="228.0" y="232" text-anchor="middle" class="t-spruce" font-size="16" font-weight="700">2.2</text><path d="M276 90.0 h18" stroke="#5C6B67" stroke-width="2.5" marker-end="url(#ah)"/><rect x="298" y="64" width="88" height="52" rx="6" fill="#1F5C4F"/><text x="342.0" y="97" text-anchor="middle" class="t-white" font-size="20" font-weight="700">3</text><rect x="298" y="132" width="88" height="52" rx="6" fill="#FFFFFF" stroke="#1F5C4F" stroke-width="2"/><text x="342.0" y="164" text-anchor="middle" class="t-spruce" font-size="16" font-weight="700">3.1</text><rect x="298" y="200" width="88" height="52" rx="6" fill="#FFFFFF" stroke="#1F5C4F" stroke-width="2"/><text x="342.0" y="232" text-anchor="middle" class="t-spruce" font-size="16" font-weight="700">3.2</text><rect x="298" y="268" width="88" height="52" rx="6" fill="#FFFFFF" stroke="#1F5C4F" stroke-width="2"/><text x="342.0" y="300" text-anchor="middle" class="t-spruce" font-size="16" font-weight="700">3.3</text><rect x="298" y="336" width="88" height="52" rx="6" fill="#FFFFFF" stroke="#1F5C4F" stroke-width="2"/><text x="342.0" y="368" text-anchor="middle" class="t-spruce" font-size="16" font-weight="700">3.4</text><path d="M390 90.0 h18" stroke="#5C6B67" stroke-width="2.5" marker-end="url(#ah)"/><rect x="412" y="64" width="88" height="52" rx="6" fill="#1F5C4F"/><text x="456.0" y="97" text-anchor="middle" class="t-white" font-size="20" font-weight="700">4</text><rect x="412" y="132" width="88" height="52" rx="6" fill="#FFFFFF" stroke="#1F5C4F" stroke-width="2"/><text x="456.0" y="164" text-anchor="middle" class="t-spruce" font-size="16" font-weight="700">4.1</text><text x="70" y="42" class="t-ink" font-size="18" font-weight="700">Breadth: one slide per topic</text><path d="M526 132 v200" stroke="#5C6B67" stroke-width="2.5" marker-end="url(#ah)"/><text x="544" y="152" class="t-ink" font-size="18" font-weight="700">Depth</text><text x="544" y="176" class="t-cap" font-size="16">detail,</text><text x="544" y="196" class="t-cap" font-size="16">examples,</text><text x="544" y="216" class="t-cap" font-size="16">exercises</text></svg></figure>
+    <ul>
+      <li><b>Two dimensions.</b> Walk across for the overview; go down for detail. One deck serves the live session and self-guided reading afterward.</li>
+      <li><b>It's just HTML.</b> Diagrams, charts, code, click-to-reveal answers, links, and speaker notes in one file that opens in any browser.</li>
+      <li><b>Text all the way down.</b> Claude edits one slide's HTML instead of regenerating a binary file, and every change shows up cleanly in git.</li>
+    </ul>
+  </div>
+  <div class="callout callout--tip"><div class="callout__tab"><svg class="ic" aria-hidden="true"><use href="#i-tip"/></svg></div><div class="callout__body"><b class="callout__label">Tip</b><p>Press S in any Reveal.js deck to open the speaker view with notes and a timer.</p></div></div>
+  <footer><span>Sources: <a href="https://revealjs.com/vertical-slides/">Reveal.js: vertical slides</a> · <a href="https://revealjs.com/speaker-view/">Speaker view</a></span></footer>
+  <aside class="notes">The 2D grid is the key idea: the top row is a complete talk on its own, and the columns below hold what you'd cover if there's time, or what people read later on the hosted deck. Because the deck is text, a fix to one slide is a small, targeted edit.</aside>
+</section>
+<!-- TOPIC 3: The process -->
+<section id="s3" class="topic" data-background-color="#E6F0EC">
+  <h2><span class="marker">3</span>The process</h2>
+  <figure class="diagram"><pre class="mermaid">
+flowchart LR
+  S["Seed files<br/>+ research"] --> O["OUTLINE.md<br/>numbered, tagged"]
+  B["BRIEF.md"] --> O
+  O --> G{"Approved?"}
+  G -->|"not yet: revise in text"| O
+  G -->|yes| D["Reveal.js deck"]
+  ST["Style guide"] --> D
+  D --> C["Check<br/>every slide"]
+  class D key
+  class G gate
+  classDef key fill:#1F5C4F,stroke:#1F5C4F,color:#FFFFFF
+  classDef gate fill:#FDF3DC,stroke:#E0A21B,color:#1E2B2E
+</pre></figure>
+  <div class="phases">
+    <div><b>Phase 1</b><span>Many cheap revisions of a numbered, tagged Markdown outline.</span></div>
+    <div class="gate"><b>The gate</b><span>A recorded approval in DECISIONS.md, not a casual "show me a slide".</span></div>
+    <div><b>Phase 2</b><span>One build from the approved outline, then targeted fixes and checks.</span></div>
+  </div>
+  <aside class="notes">This is the same flow as the repo README. Stress the gate: it's what stops Claude from jumping to slides early, and it's a line in a file, so every chat can see it.</aside>
+</section>
+<!-- TOPIC 4: A Claude Project as the workspace -->
+<section id="s4" class="topic" data-background-color="#E6F0EC">
+  <h2><span class="marker">4</span>A Claude Project as the workspace</h2>
+  <figure><svg viewBox="0 0 1000 410" role="img" aria-label="Project instructions govern every chat. Every chat reads the knowledge files; Claude writes OUTLINE.md and DECISIONS.md back at checkpoints."><defs><marker id="ah2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#5C6B67"/></marker><marker id="ah3" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#3E7D3A"/></marker></defs><rect x="0" y="0" width="1000" height="56" rx="8" fill="#16443A"/><text x="500" y="35" text-anchor="middle" class="t-white" font-size="21" font-weight="700">Project instructions: one set of rules for every chat</text><text x="0" y="96" class="t-cap" font-size="16" font-weight="700">KNOWLEDGE FILES</text><text x="660" y="96" class="t-cap" font-size="16" font-weight="700">CHATS</text><rect x="0" y="108" width="470" height="42" rx="6" fill="#FFFFFF" stroke="#D5DDD9" stroke-width="2"/><text x="16" y="135" class="t-ink" font-size="18" font-weight="700">BRIEF.md</text><text x="454" y="135" text-anchor="end" class="t-cap" font-size="16">this talk's settings</text><rect x="0" y="158" width="470" height="42" rx="6" fill="#E7F2E4" stroke="#3E7D3A" stroke-width="2"/><text x="16" y="185" class="t-ink" font-size="18" font-weight="700">OUTLINE.md</text><text x="454" y="185" text-anchor="end" class="t-cap" font-size="16">the content</text><rect x="0" y="208" width="470" height="42" rx="6" fill="#E7F2E4" stroke="#3E7D3A" stroke-width="2"/><text x="16" y="235" class="t-ink" font-size="18" font-weight="700">DECISIONS.md</text><text x="454" y="235" text-anchor="end" class="t-cap" font-size="16">the decision log</text><rect x="0" y="258" width="470" height="42" rx="6" fill="#FFFFFF" stroke="#D5DDD9" stroke-width="2"/><text x="16" y="285" class="t-ink" font-size="18" font-weight="700">WORKFLOW, CONVENTIONS, SPEC</text><text x="454" y="285" text-anchor="end" class="t-cap" font-size="16">the rules</text><rect x="0" y="308" width="470" height="42" rx="6" fill="#FFFFFF" stroke="#D5DDD9" stroke-width="2"/><text x="16" y="335" class="t-ink" font-size="18" font-weight="700">STYLE-*.md</text><text x="454" y="335" text-anchor="end" class="t-cap" font-size="16">the look and the tags</text><rect x="0" y="358" width="470" height="42" rx="6" fill="#FFFFFF" stroke="#D5DDD9" stroke-width="2"/><text x="16" y="385" class="t-ink" font-size="18" font-weight="700">Seed files</text><text x="454" y="385" text-anchor="end" class="t-cap" font-size="16">notes, transcripts, articles</text><rect x="660" y="118" width="340" height="74" rx="8" fill="#FFFFFF" stroke="#1F5C4F" stroke-width="2"/><text x="680" y="150" class="t-ink" font-size="19" font-weight="700">Outline chats</text><text x="680" y="174" class="t-cap" font-size="16">research, draft, revise</text><rect x="660" y="214" width="340" height="74" rx="8" fill="#FFFFFF" stroke="#1F5C4F" stroke-width="2"/><text x="680" y="246" class="t-ink" font-size="19" font-weight="700">Review chat</text><text x="680" y="270" class="t-cap" font-size="16">fresh eyes before approval</text><rect x="660" y="310" width="340" height="74" rx="8" fill="#FFFFFF" stroke="#1F5C4F" stroke-width="2"/><text x="680" y="342" class="t-ink" font-size="19" font-weight="700">Build chat</text><text x="680" y="366" class="t-cap" font-size="16">Phase 2: the deck</text><path d="M478 300 C570 300 580 262 650 262" fill="none" stroke="#5C6B67" stroke-width="2.5" marker-end="url(#ah2)"/><text x="566" y="322" text-anchor="middle" class="t-cap" font-size="16">every chat reads</text><path d="M650 168 C590 168 560 160 478 160" fill="none" stroke="#3E7D3A" stroke-width="3" marker-end="url(#ah3)"/><text x="565" y="150" text-anchor="middle" class="t-fern" font-size="16" font-weight="700">Claude writes back</text></svg></figure>
+  <ul class="tight">
+    <li>Chats don't share history; files do. Claude writes OUTLINE.md and DECISIONS.md at checkpoints, so a fresh chat picks up where the last one stopped.</li>
+    <li>The instructions are the same for every talk. Only BRIEF.md changes.</li>
+  </ul>
+  <footer><span>Source: <a href="https://support.claude.com/en/articles/9519177">Claude Help Center: Projects</a></span></footer>
+  <aside class="notes">Fresh chats are a feature: a review chat isn't anchored to the drafting chat's choices, and short chats cost less. The files carry the state between them.</aside>
+</section>
+<!-- TOPIC 5: Tags drive the deck -->
+<section id="s5" class="topic" data-background-color="#E6F0EC">
+  <h2><span class="marker">5</span>Tags drive the deck</h2>
+  <div class="tagmap">
+    <div>
+      <p class="col-label">In the outline</p>
+      <pre class="code"><code>## 3. Why reviews stall [All] [Core]
+- Big pull requests wait longest. [Research]
+- Our median wait: [TBD: hours to first review]
+
+&gt; [!WATCHOUT]
+&gt; One change per pull request.
+
+### 3.1 [Quick check] Which gets reviewed first?
+Speaker notes: Pause for answers.</code></pre>
+    </div>
+    <div class="arrow"><svg class="ic" aria-hidden="true"><use href="#i-arrow"/></svg></div>
+    <div>
+      <p class="col-label">In the deck</p>
+      <ul class="renders">
+        <li><code>[All]</code> <code>[Research]</code> <span class="muted">working aids, stripped</span></li>
+        <li><span class="tbd">TBD: hours to first review</span></li>
+        <li class="callout-row"><div class="callout callout--watchout"><div class="callout__tab"><svg class="ic" aria-hidden="true"><use href="#i-watchout"/></svg></div><div class="callout__body"><b class="callout__label">Watch out</b><p>One change per pull request.</p></div></div></li>
+        <li><span class="mini-quiz"><svg class="ic" aria-hidden="true"><use href="#i-question"/></svg>Quick check: answer appears on a click</span></li>
+        <li><code>Speaker notes:</code> <span class="muted">presenter view only</span></li>
+      </ul>
+    </div>
+  </div>
+  <p class="swap">The <b>style guide</b> decides the look. Swap <code>STYLE-FIELD-GUIDE.md</code> for <code>STYLE-NEUTRAL.md</code> and the same outline renders in a different theme.</p>
+  <p class="next chrome">Next: open <a href="examples/field-guide-demo/deck.html">examples/field-guide-demo/deck.html</a> beside its OUTLINE.md</p>
+  <aside class="notes">Tags say what a piece of content is; the style guide says what it looks like. Every tag is either rendered or stripped by a written rule, so nothing is left to guesswork. The demo deck uses every tag at least once, so it's the best place to see the mapping.</aside>
+</section>
+
+</div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/reveal.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/plugin/notes/notes.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.12.0/mermaid.min.js"></script>
+<script>
+Reveal.initialize({
+  width: 1280, height: 720, margin: 0.04, minScale: 0.2, maxScale: 1.6,
+  center: false, hash: true, controls: true, progress: true,
+  slideNumber: false, transition: 'fade', transitionSpeed: 'fast',
+  plugins: [ RevealNotes ]
+});
+
+// Page numbers drawn inside each slide (Reveal's own number collides with the arrows).
+function addPageNumbers(){
+  var all = Reveal.getSlides(), n = all.length;
+  all.forEach(function(sl, i){
+    if (sl.id === 'title' || sl.querySelector(':scope > .pgnum')) return;
+    var p = document.createElement('div'); p.className = 'pgnum'; p.textContent = (i + 1) + ' / ' + n; sl.appendChild(p);
+  });
+}
+
+// Shrink a slide's text only until nothing overflows and nothing overlaps the footer.
+function fitSlide(s){
+  if (!s || s.classList.contains('stack')) return;
+  s.style.fontSize = '';
+  var f = 1;
+  function tooTall(){
+    if (s.scrollHeight > s.clientHeight + 2) return true;
+    var ft = s.querySelector(':scope > footer');
+    var limit = ft ? ft.offsetTop - 6 : s.clientHeight - 64;
+    var kids = s.querySelectorAll(':scope > *:not(footer):not(aside):not(.pgnum):not(.more):not(.tiy):not(.chrome)');
+    for (var i = 0; i < kids.length; i++){ if (kids[i].offsetTop + kids[i].offsetHeight > limit) return true; }
+    return false;
+  }
+  while (tooTall() && f > 0.62){ f -= 0.03; s.style.fontSize = f + 'em'; }
+}
+
+// Mermaid renders badly in hidden slides, so each diagram renders when its slide is first shown.
+if (window.mermaid) {
+  mermaid.initialize({
+    startOnLoad: false, securityLevel: 'strict', theme: 'base',
+    flowchart: { curve: 'basis', htmlLabels: true, useMaxWidth: true, nodeSpacing: 34, rankSpacing: 60, padding: 14 },
+    themeVariables: {
+      fontFamily: '"Avenir Next", Avenir, "Segoe UI", system-ui, sans-serif', fontSize: '20px',
+      primaryColor: '#FFFFFF', primaryBorderColor: '#1F5C4F', primaryTextColor: '#1E2B2E',
+      lineColor: '#5C6B67', edgeLabelBackground: '#FFFFFF'
+    }
+  });
+}
+function renderDiagrams(slide){
+  if (!window.mermaid || !slide) return;
+  var nodes = Array.prototype.slice.call(slide.querySelectorAll('pre.mermaid:not([data-processed])'));
+  if (!nodes.length) return;
+  mermaid.run({ nodes: nodes }).catch(function(err){ console.error('Mermaid:', err); }).then(function(){ fitSlide(slide); });
+}
+
+Reveal.on('ready', function(e){ addPageNumbers(); fitSlide(e.currentSlide); renderDiagrams(e.currentSlide); });
+Reveal.on('slidechanged', function(e){ fitSlide(e.currentSlide); renderDiagrams(e.currentSlide); });
+window.addEventListener('resize', function(){ fitSlide(Reveal.getCurrentSlide()); });
+
+</script>
+</body>
+</html>
