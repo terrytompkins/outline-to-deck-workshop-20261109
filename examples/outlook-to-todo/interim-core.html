@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Using Claude to Create a ToDo List from Your Inbox</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/reset.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/reveal.min.css">
+<style>
+:root{
+  --ink:#1E2B2E; --spruce:#1F5C4F; --spruce-deep:#16443A; --moss:#E6F0EC; --surface:#FFFFFF;
+  --line:#D5DDD9; --caption:#5C6B67;
+  --sun:#E0A21B; --sun-tint:#FDF3DC; --sky:#2F6F9F; --sky-tint:#E4EEF6;
+  --signal:#C8501F; --signal-tint:#FBE6DD; --slate:#4B5563; --slate-tint:#EEF0F3;
+  --fern:#3E7D3A; --fern-tint:#E7F2E4;
+  --stack:"Avenir Next", Avenir, "Segoe UI", system-ui, sans-serif;
+  --mono:ui-monospace, Menlo, Consolas, monospace;
+}
+html,body{background:var(--moss);}
+.reveal{font-family:var(--stack);font-size:34px;font-weight:400;color:var(--ink);}
+.reveal .slides{text-align:left;}
+.reveal .slides section{text-align:left;}
+.reveal .slides section.slide{height:720px;box-sizing:border-box;}
+.reveal h1,.reveal h2,.reveal h3{font-family:var(--stack);font-weight:700;text-transform:none;letter-spacing:0;color:var(--ink);margin:0;line-height:1.15;}
+.reveal h2{font-size:1.32em;}
+.reveal a{color:var(--spruce);}
+
+/* layout wrapper inside every content slide (no position on section) */
+.reveal .slides section .wrap{display:flex;flex-direction:column;height:100%;padding:38px 56px 84px;box-sizing:border-box;}
+.reveal .slides section .wrap > h2{flex:none;display:flex;align-items:center;gap:20px;margin-bottom:22px;}
+.reveal .slides section .content{flex:1;min-height:0;overflow:hidden;display:flex;flex-direction:column;gap:16px;}
+.reveal .slides section .cols{display:flex;gap:44px;flex:1;min-height:0;}
+.reveal .slides section .cols .text{flex:1.55;min-width:0;}
+.reveal .slides section .cols .vis{flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.reveal .slides section .vis svg{width:100%;height:auto;max-height:400px;}
+.reveal .slides section .vis .cap{font-size:16px;color:var(--caption);margin-top:6px;text-align:center;}
+
+.reveal .slides section .content{font-size:var(--list,0.7em);}
+.reveal .slides section ul,.reveal .slides section ol{display:block;margin:0;padding:0 0 0 1.05em;font-size:1em;line-height:1.32;}
+.reveal .slides section li{margin:0 0 0.5em 0;}
+.reveal .slides section li::marker{color:var(--spruce);}
+
+/* heading chips */
+.marker{flex:none;display:inline-flex;align-items:center;justify-content:center;min-width:56px;height:56px;padding:0 20px 0 14px;box-sizing:border-box;background:var(--spruce);color:#fff;border-radius:10px;font-size:34px;font-weight:700;clip-path:polygon(0 0,100% 0,calc(100% - 11px) 50%,100% 100%,0 100%);}
+.chip{flex:none;display:inline-flex;align-items:center;justify-content:center;min-width:44px;height:44px;padding:0 10px;box-sizing:border-box;background:var(--moss);color:var(--spruce);border-radius:8px;font-size:24px;font-weight:700;}
+
+/* chrome: footer, page number, cue, badge */
+.footer{position:absolute;left:56px;bottom:22px;width:900px;font-size:14px;line-height:1.3;color:var(--caption);}
+.footer .asof{color:var(--spruce);font-weight:700;margin-right:8px;}
+.footer a{color:var(--caption);text-decoration:underline dotted;text-underline-offset:3px;}
+.pgnum{position:absolute;right:120px;bottom:22px;font-size:14px;line-height:1.3;color:var(--caption);font-variant-numeric:tabular-nums;}
+.more{position:absolute;right:56px;top:10px;font-size:14px;line-height:1.3;color:var(--spruce);display:flex;align-items:center;gap:6px;}
+.tiy{position:absolute;right:56px;top:10px;display:inline-flex;align-items:center;gap:8px;background:var(--spruce);color:#fff;font-size:14px;font-weight:700;padding:6px 12px;border-radius:999px;}
+
+/* TBD chip and UNVERIFIED tag */
+.tbd{display:inline-block;border:2px dashed var(--signal);background:var(--signal-tint);color:var(--ink);border-radius:8px;padding:1px 10px;font-size:0.9em;line-height:1.3;margin-top:4px;}
+.unv{display:inline-block;background:var(--slate-tint);color:var(--slate);border-radius:999px;padding:0 10px;font-size:14px;font-weight:700;vertical-align:middle;}
+
+/* callouts */
+.callout{display:flex;flex:none;border-radius:10px;overflow:hidden;font-size:1em;line-height:1.35;}
+.callout .tab{flex:none;width:58px;display:flex;align-items:center;justify-content:center;color:#fff;}
+.callout .tab svg{width:30px;height:30px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+.callout .cbody{padding:12px 18px;}
+.callout .cbody b{display:block;margin-bottom:2px;}
+.callout .cbody p{margin:0;}
+.callout.tip{background:var(--sun-tint);} .callout.tip .tab{background:var(--sun);color:var(--ink);} .callout.tip b{color:#8A5F00;}
+.callout.remember{background:var(--sky-tint);} .callout.remember .tab{background:var(--sky);} .callout.remember b{color:var(--sky);}
+.callout.watchout{background:var(--signal-tint);} .callout.watchout .tab{background:var(--signal);} .callout.watchout b{color:var(--signal);}
+.callout.underthehood{background:var(--slate-tint);} .callout.underthehood .tab{background:var(--slate);} .callout.underthehood b{color:var(--slate);}
+.callout.fieldnote{background:var(--fern-tint);} .callout.fieldnote .tab{background:var(--fern);} .callout.fieldnote b{color:var(--fern);}
+
+/* title slide */
+.reveal .slides section.cover .wrap{padding:0;}
+.cover .art{position:absolute;left:0;top:0;width:1280px;height:720px;}
+.cover .ctext{position:absolute;left:96px;top:190px;width:1000px;}
+.cover .series{font-size:26px;color:var(--moss);letter-spacing:.04em;margin:0 0 18px;font-weight:400;}
+.reveal .cover h1{color:#fff;font-size:70px;line-height:1.1;margin:0 0 34px;}
+.cover .by{color:#fff;font-size:30px;margin:0 0 6px;font-weight:700;}
+.cover .date{color:#fff;font-size:26px;margin:0;}
+
+/* agenda */
+.agenda{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:5px;}
+.reveal .slides section ul.agenda{padding:0;font-size:1.03em;}
+.agenda li{margin:0;}
+.agenda a{display:flex;align-items:center;gap:18px;text-decoration:none;color:var(--ink);padding:1px 0;}
+.agenda .sg{margin-left:6px;font-size:14px;font-weight:700;color:var(--spruce);background:var(--surface);border:1px solid var(--spruce);border-radius:999px;padding:1px 10px;}
+.agenda .marker{min-width:40px;height:40px;font-size:24px;padding:0 16px 0 10px;}
+
+/* vertical slides */
+.reveal .slides section.vert .wrap > h2{font-size:1.2em;}
+.slabel{margin:0;font-size:16px;font-weight:700;color:var(--spruce);letter-spacing:.04em;text-transform:uppercase;}
+.mini{margin:0;font-size:0.85em;color:var(--caption);}
+.cap2{margin:0;font-size:16px;color:var(--caption);}
+pre.code{margin:0;font-family:var(--mono);font-size:0.9em;line-height:1.45;background:var(--moss);border:1px solid var(--line);border-radius:10px;padding:16px 22px;white-space:pre-wrap;color:var(--ink);box-shadow:none;width:auto;}
+pre.mermaid{margin:0;display:flex;justify-content:center;background:none;box-shadow:none;width:auto;font-family:var(--stack);font-size:18px;line-height:1.2;}
+pre.mermaid svg text,pre.mermaid svg .nodeLabel,pre.mermaid svg .edgeLabel{font-family:"Avenir Next", Avenir, "Segoe UI", system-ui, sans-serif !important;font-size:18px !important;}
+pre.mermaid:not([data-processed]){visibility:hidden;}
+pre.mermaid svg{max-width:100%;height:auto;max-height:300px;}
+pre.mermaid svg foreignObject{overflow:visible;}
+pre.mermaid svg .nodeLabel p,pre.mermaid svg .edgeLabel p{margin:0;white-space:nowrap;}
+.reveal b{font-weight:700;}
+.outcome p,.callout p,.ans p{line-height:1.3;}
+.tbl{border-collapse:collapse;width:100%;font-size:0.85em;}
+.tbl th{color:var(--spruce);text-align:left;border-bottom:2px solid var(--spruce);padding:8px 10px;}
+.tbl td{border-bottom:1px solid var(--line);padding:8px 10px;vertical-align:top;}
+.time{margin:0;font-size:0.9em;color:var(--caption);}
+ol.trail{list-style:none;padding:0;margin:0;counter-reset:st;}
+.reveal .slides section ol.trail{padding:0;line-height:1.25;}
+ol.trail li{position:relative;counter-increment:st;padding:0 0 0.45em 46px;margin:0;min-height:1.5em;}
+ol.trail li::before{content:counter(st);position:absolute;left:0;top:-1px;width:30px;height:30px;border-radius:50%;background:var(--spruce);color:#fff;font-size:16px;font-weight:700;display:flex;align-items:center;justify-content:center;}
+ol.trail li::after{content:"";position:absolute;left:14px;top:30px;bottom:-1px;width:2px;background:var(--spruce);}
+ol.trail li:last-child::after{display:none;}
+.outcome{flex:none;background:var(--fern-tint);border-radius:10px;padding:10px 18px;}
+.outcome b{display:block;color:var(--fern);margin-bottom:2px;}
+.outcome p{margin:0;}
+ol.plain{margin:0;}
+.qlab{display:inline-flex;align-items:center;gap:8px;color:var(--sky);}
+.qc{display:flex;flex-direction:column;gap:16px;}
+.qc .q{margin:0;font-size:1.25em;font-weight:700;line-height:1.3;}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.opt{border:2px solid var(--line);border-radius:10px;padding:12px 16px;background:#fff;}
+.ans{background:var(--sky-tint);border-radius:10px;padding:12px 18px;}
+.ans b{display:block;color:var(--sky);margin-bottom:2px;}
+.ans p{margin:0;}
+.mvf{display:flex;flex-direction:column;gap:22px;}
+.pair{display:grid;grid-template-columns:1fr 1fr;gap:22px;}
+.myth,.fact{display:flex;gap:14px;border-radius:10px;padding:14px 18px;}
+.myth{background:var(--signal-tint);} .fact{background:var(--fern-tint);}
+.myth b{color:var(--signal);} .fact b{color:var(--fern);}
+.myth p,.fact p{margin:2px 0 0;}
+.mk{flex:none;font-size:1.5em;font-weight:700;line-height:1;}
+.myth .mk{color:var(--signal);} .fact .mk{color:var(--fern);}
+ul.checks{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:14px;}
+.reveal .slides section ul.checks{padding:0;}
+ul.checks li{display:flex;align-items:flex-start;gap:14px;margin:0;}
+ul.checks li svg{flex:none;margin-top:2px;}
+.next{margin:12px 0 0;font-size:0.85em;color:var(--spruce);font-weight:700;}
+</style>
+</head>
+<body>
+<div class="reveal"><div class="slides">
+
+<!-- TOPIC 0: Title -->
+<section id="title">
+<section class="slide cover" data-background-color="#16443A">
+<svg class="art" viewBox="0 0 1280 720" aria-hidden="true"><g fill="none" stroke="#fff" stroke-opacity=".08" stroke-width="2"><ellipse cx="860" cy="330" rx="90" ry="50" transform="rotate(-18 860 330)"/><ellipse cx="866" cy="333" rx="148" ry="84" transform="rotate(-18 860 330)"/><ellipse cx="872" cy="336" rx="206" ry="118" transform="rotate(-18 860 330)"/><ellipse cx="878" cy="339" rx="264" ry="152" transform="rotate(-18 860 330)"/><ellipse cx="884" cy="342" rx="322" ry="186" transform="rotate(-18 860 330)"/><ellipse cx="890" cy="345" rx="380" ry="220" transform="rotate(-18 860 330)"/><ellipse cx="896" cy="348" rx="438" ry="254" transform="rotate(-18 860 330)"/><ellipse cx="902" cy="351" rx="496" ry="288" transform="rotate(-18 860 330)"/><ellipse cx="908" cy="354" rx="554" ry="322" transform="rotate(-18 860 330)"/><ellipse cx="914" cy="357" rx="612" ry="356" transform="rotate(-18 860 330)"/><ellipse cx="920" cy="360" rx="670" ry="390" transform="rotate(-18 860 330)"/><ellipse cx="926" cy="363" rx="728" ry="424" transform="rotate(-18 860 330)"/><ellipse cx="932" cy="366" rx="786" ry="458" transform="rotate(-18 860 330)"/><ellipse cx="938" cy="369" rx="844" ry="492" transform="rotate(-18 860 330)"/></g></svg>
+<div class="ctext">
+<p class="series">Learning Day Workshop</p>
+<h1>Using Claude to Create a ToDo List from Your Inbox</h1>
+<p class="by">Terry Tompkins</p>
+<p class="date">November 30, 2026</p>
+</div>
+<aside class="notes">Set expectations: this is hands-on. Everyone will try it on their own mailbox three times: check the connection, build a to-do list, and (optionally) schedule it. Central message: Claude can turn the email, Teams messages, and calendar you already have into a short, ranked to-do list in minutes. Connect it once, ask clearly, check the result, and you decide what to act on.</aside>
+</section>
+</section>
+
+<!-- TOPIC 0: Agenda -->
+<section id="agenda">
+<section class="slide top" data-background-color="#E6F0EC">
+<div class="wrap"><h2>Agenda</h2>
+<div class="content"><ul class="agenda">
+<li><a href="#/s1"><span class="marker">1</span><span>Why turn your inbox into a to-do list</span></a></li>
+<li><a href="#/s2"><span class="marker">2</span><span>Check and enable your Microsoft 365 connection</span></a></li>
+<li><a href="#/s3"><span class="marker">3</span><span>What Claude can see (and what it can't)</span></a></li>
+<li><a href="#/s4"><span class="marker">4</span><span>Write a prompt that turns messages into tasks</span></a></li>
+<li><a href="#/s5"><span class="marker">5</span><span>Prioritize with your own rules</span></a></li>
+<li><a href="#/s6"><span class="marker">6</span><span>Check before you act</span></a></li>
+<li><a href="#/s7"><span class="marker">7</span><span>Repeat it on a schedule</span></a></li>
+<li><a href="#/s8"><span class="marker">8</span><span>When it doesn't work as expected</span><span class="sg">self-guided</span></a></li>
+<li><a href="#/s9"><span class="marker">9</span><span>Wrap-up and next steps</span></a></li>
+</ul></div></div>
+</section>
+</section>
+
+<!-- TOPIC 1: Why turn your inbox into a to-do list -->
+<section id="s1">
+<section class="slide top" data-background-color="#E6F0EC">
+<div class="more">more on this trail <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></div>
+<div class="wrap"><h2><span class="marker">1</span>Why turn your inbox into a to-do list</h2>
+<div class="content">
+<div class="cols"><div class="text"><ul>
+<li>Work arrives faster than we can sort it: the average Microsoft 365 user receives about 117 emails and 153 Teams messages per day, according to Microsoft's report published in June 2025.</li>
+<li>Tasks hide inside threads, chats, and meeting invites, so the to-do list in your head is always out of date.</li>
+<li>Claude can read your Outlook mail, Teams chats, and calendar (with your permission), find the requests, and rank them for you.</li>
+<li>Today's goal: leave with a working prompt, a result you've checked, and (optionally) a schedule.</li>
+</ul></div>
+<div class="vis"><figure style="margin:0;width:100%;text-align:center"><svg viewBox="0 0 440 360" role="img" font-family="Avenir Next, Avenir, Segoe UI, system-ui, sans-serif">
+<defs><marker id="ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0L10 5L0 10z" fill="#5C6B67"/></marker></defs>
+<g fill="#fff" stroke="#1F5C4F" stroke-width="2">
+<rect x="4" y="30" width="170" height="64" rx="10"/><rect x="4" y="148" width="170" height="64" rx="10"/><rect x="4" y="266" width="170" height="64" rx="10"/>
+<rect x="250" y="30" width="186" height="300" rx="10"/></g>
+<g fill="#1E2B2E" font-size="20" text-anchor="middle"><text x="89" y="69">Outlook email</text><text x="89" y="187">Teams messages</text><text x="89" y="305">Calendar</text></g>
+<g stroke="#5C6B67" stroke-width="2" fill="none" marker-end="url(#ar)"><path d="M176 62 C 212 62, 214 150, 246 170"/><path d="M176 180 L 244 180"/><path d="M176 298 C 212 298, 214 210, 246 190"/></g>
+<text x="343" y="64" font-size="20" font-weight="700" fill="#1F5C4F" text-anchor="middle">Ranked to-do list</text>
+<g fill="#1F5C4F"><circle cx="278" cy="108" r="13"/><circle cx="278" cy="158" r="13"/><circle cx="278" cy="208" r="13"/><circle cx="278" cy="258" r="13"/></g>
+<g fill="#fff" font-size="16" font-weight="700" text-anchor="middle"><text x="278" y="114">1</text><text x="278" y="164">2</text><text x="278" y="214">3</text><text x="278" y="264">4</text></g>
+<g stroke="#D5DDD9" stroke-width="8" stroke-linecap="round"><path d="M304 108H416"/><path d="M304 158H400"/><path d="M304 208H410"/><path d="M304 258H390"/></g>
+</svg><figcaption class="cap">Illustrative, not measured data.</figcaption></figure></div></div>
+</div></div>
+<div class="footer"><span class="asof">As of November 8, 2026</span><a href="https://news.microsoft.com/de-ch/2025/06/17/new-microsoft-study-reveals-the-rise-of-the-infinite-workday-40-of-employees-check-email-before-6-a-m-evening-meetings-up-16/" target="_blank" rel="noopener">Microsoft Work Trend Index special report, 2025</a></div>
+<aside class="notes">Ask the room how many unread emails and Teams chats they have right now. The Microsoft figures are averages from Microsoft 365 usage data gathered in early 2025; present them as context, not as a promise of time saved. Don't claim time savings for Claude: we have no measured data. Check before the workshop that the report link opens in English.</aside>
+</section>
+<section class="slide vert" data-background-color="#FFFFFF">
+<!-- 1.1 What we'll build today -->
+<div class="wrap"><h2><span class="chip">1.1</span>What we'll build today</h2>
+<div class="content">
+<ul>
+<li>The workflow has five moves: connect, ask, prioritize, check, repeat.</li>
+<li>Each move maps to a section of this workshop and to one of the session outcomes.</li>
+</ul>
+<pre class="mermaid">flowchart LR
+  A[Connect Microsoft 365] --&gt; B[Ask for tasks]
+  B --&gt; C[Apply your priorities]
+  C --&gt; D{Looks right?}
+  D --&gt;|No| B
+  D --&gt;|Yes| E[Act or schedule it]
+  class D key
+  classDef good fill:#E7F2E4,stroke:#3E7D3A
+  classDef warn fill:#FBE6DD,stroke:#C8501F
+  classDef key fill:#1F5C4F,stroke:#1F5C4F,color:#FFFFFF</pre>
+</div></div>
+
+<aside class="notes">Point out the loop: checking the output sends you back to refine the ask. That loop is where most of the quality comes from.</aside>
+</section>
+<section class="slide vert" data-background-color="#FFFFFF">
+<!-- 1.2 What you need today -->
+<div class="wrap"><h2><span class="chip">1.2</span>What you need today</h2>
+<div class="content">
+<ul>
+<li>A work Microsoft 365 account (the one you use for Outlook and Teams). Personal accounts such as outlook.com or hotmail.com can't be used.</li>
+<li>Your Claude account, signed in.</li>
+<li>A few minutes of real mail and chat to work with: you'll use your own, so nothing needs preparing.</li>
+</ul>
+</div></div>
+<div class="footer"><span class="asof">As of November 8, 2026</span><a href="https://support.claude.com/en/articles/15183774-connect-to-microsoft-365" target="_blank" rel="noopener">Connect to Microsoft 365</a></div>
+<aside class="notes">Everyone at IDEXX uses Outlook and Teams, so the Microsoft account requirement should already be met. Name it anyway; it explains the most common sign-in failure.</aside>
+</section>
+</section>
+
+<!-- TOPIC 2: Check and enable your Microsoft 365 connection -->
+<section id="s2">
+<section class="slide top" data-background-color="#E6F0EC">
+<div class="more">more on this trail <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></div>
+<div class="wrap"><h2><span class="marker">2</span>Check and enable your Microsoft 365 connection</h2>
+<div class="content">
+<ul>
+<li>Claude reaches Outlook, Teams, and your calendar through the Microsoft 365 connector. You connect it to your own account.</li>
+<li>Admin setup is a one-time step done for the whole organization. After that, each person connects themselves.</li>
+<li>Your path: Customize, then Connectors, then Microsoft 365, then Connect, then sign in with your work account.</li>
+<li>You can switch the connector on or off in any single chat from the "+" menu, and disconnect at any time.</li>
+</ul>
+</div></div>
+<div class="footer"><span class="asof">As of November 8, 2026</span><a href="https://support.claude.com/en/articles/15183774-connect-to-microsoft-365" target="_blank" rel="noopener">Connect to Microsoft 365</a> · <a href="https://support.claude.com/en/articles/12542951-set-up-the-microsoft-365-connector" target="_blank" rel="noopener">Set up the Microsoft 365 connector</a></div>
+<aside class="notes">Menu names change. Verify "Customize &gt; Connectors" in a live account the morning of the workshop and update the As-of date. If someone sees "Connect", they are not connected yet; if they see tool permissions, they are.</aside>
+</section>
+<section class="slide vert" data-background-color="#FFFFFF">
+<!-- 2.1 Check that Microsoft 365 is connected -->
+<div class="tiy"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg>Try it yourself</div><div class="wrap"><h2><span class="chip">2.1</span>Check that Microsoft 365 is connected</h2>
+<div class="content">
+<p class="time">Time: 4 minutes</p>
+<ol class="trail">
+<li>Open Customize, then Connectors.</li>
+<li>Click Connect next to Microsoft 365 if it isn't connected yet.</li>
+<li>Sign in with your work account.</li>
+<li>Open Microsoft 365 and confirm the email, calendar, and Teams chat tools are on under Tool permissions.</li>
+<li>Start a new chat and open the &quot;+&quot; menu.</li>
+<li>Check that Microsoft 365 is switched on under Connectors.</li>
+<li>Ask: &quot;List the subjects of my five most recent emails.&quot;</li>
+</ol>
+<div class="outcome"><b>You should see</b><p>Claude lists five real subjects from your inbox. If you get an error that an administrator must grant permission, move on to 2.3.</p></div>
+</div></div>
+<div class="footer"><span class="asof">As of November 8, 2026</span><a href="https://support.claude.com/en/articles/15183774-connect-to-microsoft-365" target="_blank" rel="noopener">Connect to Microsoft 365</a></div>
+<aside class="notes">Walk the first four steps on screen, then let people work. Circulate for sign-in problems. Anyone blocked: use Plan B on 2.3 and continue in section 4.</aside>
+</section>
+<section class="slide vert" data-background-color="#FFFFFF">
+<!-- 2.2 What the connector asks to read -->
+<div class="wrap"><h2><span class="chip">2.2</span>What the connector asks to read</h2>
+<div class="content">
+<ul>
+<li>It asks to read: your profile (to sign you in), your email, your calendar, and your Teams chat messages.</li>
+<li>Permissions are delegated: Claude acts as you and sees only what you can already see.</li>
+<li>Read access is the default. Actions such as sending email or posting in Teams exist only when an admin turns on write tools (see section 3).</li>
+</ul>
+</div></div>
+<div class="footer"><span class="asof">As of November 8, 2026</span><a href="https://support.claude.com/en/articles/12684923-microsoft-365-connector-security-guide" target="_blank" rel="noopener">Microsoft 365 connector security guide</a></div>
+<aside class="notes">Keep this non-technical. The permission names are on the connector's help page if someone asks.</aside>
+</section>
+<section class="slide vert" data-background-color="#FFFFFF">
+<!-- 2.3 If it doesn't connect -->
+<div class="wrap"><h2><span class="chip">2.3</span>If it doesn't connect</h2>
+<div class="content">
+<ul>
+<li>Common causes, in the order to check: not a work account; license not active; admin consent not granted; your organization restricts third-party apps; browser blocking the sign-in popup.</li>
+<li>In Microsoft's admin consent workflow, a person who can't consent sees an approval request, and designated reviewers approve it.</li>
+<li>Plan B if you're still blocked: pair up with a neighbor, or paste a few non-sensitive messages into a chat and run the same prompt on them. Pasting content into the chat is the documented workaround for mail Claude can't search.</li>
+</ul>
+<div class="callout tip"><div class="tab"><svg viewBox="0 0 24 24"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2.1h5c0-.9.4-1.6 1-2.1A6 6 0 0 0 12 3z"/></svg></div><div class="cbody"><b>Tip</b><p>Sign-in window not appearing? Try another browser, turn off ad blockers and privacy extensions, or clear cookies, then try again.</p></div></div>
+</div></div>
+<div class="footer"><span class="asof">As of November 8, 2026</span><a href="https://support.claude.com/en/articles/15183774-connect-to-microsoft-365" target="_blank" rel="noopener">Connect to Microsoft 365</a> · <a href="https://learn.microsoft.com/en-us/entra/identity/enterprise-apps/configure-admin-consent-workflow" target="_blank" rel="noopener">Microsoft Learn: admin consent workflow</a></div>
+<aside class="notes">Don't name internal admins or channels on the slide. If time allows, say where to go for help; see the TBD in 9.1.</aside>
+</section>
+<section class="slide vert" data-background-color="#FFFFFF">
+<!-- 2.4 Choose what Claude may do -->
+<div class="wrap"><h2><span class="chip">2.4</span>Choose what Claude may do</h2>
+<div class="content">
+<ul>
+<li>Under Tool permissions you can switch individual Microsoft 365 tools on or off; connectors in general can also set tools to Always allow, Needs approval, or Blocked. <span class="unv">Unverified</span></li>
+<li>A sensible starting point for this workshop: reading and searching tools on; anything that writes, sends, or deletes switched off, or set to Needs approval where that level is offered.</li>
+<li>Once connected on the web, the connection also works in the Claude iOS and Android apps.</li>
+<li>To stop access: Customize, Connectors, Microsoft 365, Disconnect. Reconnecting later doesn't need a new admin approval while the organization's consent is still active.</li>
+</ul>
+</div></div>
+<div class="footer"><span class="asof">As of November 8, 2026</span><a href="https://support.claude.com/en/articles/15183774-connect-to-microsoft-365" target="_blank" rel="noopener">Connect to Microsoft 365</a> · <a href="https://support.claude.com/en/articles/11176164-use-connectors-to-extend-claude-s-capabilities" target="_blank" rel="noopener">Use connectors to extend Claude's capabilities</a></div>
+<aside class="notes">Remind people that today's workflow only reads. We never need Claude to send anything. Unverified: whether Microsoft 365 tools offer all three levels, not just on and off.</aside>
+</section>
+</section>
+
+<!-- TOPIC 3: What Claude can see (and what it can't) -->
+<section id="s3">
+<section class="slide top" data-background-color="#E6F0EC">
+<div class="more">more on this trail <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></div>
+<div class="wrap"><h2><span class="marker">3</span>What Claude can see (and what it can't)</h2>
+<div class="content">
+<ul>
+<li>Your permissions apply: Claude sees only the mail, chats, files, and calendars you can already open.</li>
+<li>In chat, Claude looks at Microsoft 365 only when you ask something that needs it. It doesn't run background searches.</li>
+<li>It can read your Outlook mail and calendar, plus Teams chats and channels you belong to.</li>
+<li>Read-only is the default; sending, editing, and posting need extra admin enablement.</li>
+<li>Anthropic says it doesn't use inputs or outputs from its commercial products, such as Claude for Work, to train its models by default; feedback you choose to submit (thumbs up or down) is an exception.</li>
+<li>Treat message content as company data: keep out of Claude anything your organization's guidance says shouldn't go in. <span class="tbd">TBD: whether an internal guidance link can be shown on the slide</span></li>
+</ul>
+</div></div>
+<div class="footer"><span class="asof">As of November 8, 2026</span><a href="https://support.claude.com/en/articles/15183774-connect-to-microsoft-365" target="_blank" rel="noopener">Connect to Microsoft 365</a> · <a href="https://privacy.claude.com/en/articles/7996868" target="_blank" rel="noopener">Anthropic Privacy Center: Is my data used for model training?</a></div>
+<aside class="notes">This section is the answer to "is this safe?" Lead with delegated permissions: Claude is no more powerful than you are. Keep the technical depth in 3.3. The data-use bullet comes from Anthropic's Privacy Center article, which lists Claude for Work among the covered commercial products; check that wording the morning of the workshop.</aside>
+</section>
+<section class="slide vert" data-background-color="#FFFFFF">
+<!-- 3.1 Two beliefs worth correcting -->
+<div class="wrap"><h2><span class="chip">3.1</span>Two beliefs worth correcting</h2>
+<div class="content">
+<p class="slabel">Myth vs fact</p><div class="mvf"><div class="pair"><div class="myth"><span class="mk">×</span><div><b>Myth</b><p>Claude is constantly reading my inbox in the background.</p></div></div><div class="fact fragment"><span class="mk">✓</span><div><b>Fact</b><p>In chat, Claude uses Microsoft 365 only when your question needs it. A scheduled task (section 7) is different: it runs on the schedule you set.</p></div></div></div>
+<div class="pair"><div class="myth"><span class="mk">×</span><div><b>Myth</b><p>Connecting Claude to Outlook lets it send email as me.</p></div></div><div class="fact fragment"><span class="mk">✓</span><div><b>Fact</b><p>Read-only is the default. Sending exists only if an admin turns on write tools, Claude can't attach files, and Teams messages always ask you to confirm first.</p></div></div></div></div>
+</div></div>
+<div class="footer"><span class="asof">As of November 8, 2026</span><a href="https://support.claude.com/en/articles/15183774-connect-to-microsoft-365" target="_blank" rel="noopener">Connect to Microsoft 365</a></div>
+<aside class="notes">Ask who believed each myth before revealing. Myth 2 comes from the gap between the read-only default and the admin-enabled write tools. The point that Claude sees only what you can already see is on the section 3 slide.</aside>
+</section>
+<section class="slide vert" data-background-color="#FFFFFF">
+<!-- 3.2 What is and isn't searched -->
+<div class="wrap"><h2><span class="chip">3.2</span>What is and isn't searched</h2>
+<div class="content">
+<ul>
+<li>Included: your primary mailbox and its Archive folder; shared mailboxes you have delegate access to; calendar events; Teams chats and channel messages where you're a participant.</li>
+<li>Not included: the separate Online Archive mailbox; private channels you aren't in; OneNote notebooks.</li>
+<li>Email attachments: the help center doesn't say whether Claude can open them. <span class="unv">Unverified</span></li>
+<li>Files in SharePoint and OneDrive open only if they are Word, Excel, PowerPoint, PDF, or plain text.</li>
+</ul>
+<div class="callout watchout"><div class="tab"><svg viewBox="0 0 24 24"><path d="M12 3l10 18H2z"/><path d="M12 10v5M12 18v.5"/></svg></div><div class="cbody"><b>Missing isn't the same as absent</b><p>A message moved to the Online Archive won't appear in Claude's results. If an expected task is missing, check there yourself.</p></div></div>
+</div></div>
+<div class="footer"><span class="asof">As of November 8, 2026</span><a href="https://support.claude.com/en/articles/15183774-connect-to-microsoft-365" target="_blank" rel="noopener">Connect to Microsoft 365</a></div>
+<aside class="notes">This sets up the "what did it miss?" check in section 6. Whether attendees use Online Archive is unknown; ask for a show of hands. Unverified: attachment handling; tool descriptions suggest attachment text is searchable, but this needs a test in a live account.</aside>
+</section>
+<section class="slide vert" data-background-color="#FFFFFF">
+<!-- 3.3 Under the hood: who is Claude, to Microsoft? -->
+<div class="wrap"><h2><span class="chip">3.3</span>Under the hood: who is Claude, to Microsoft?</h2>
+<div class="content">
+<ul>
+<li>Claude signs in as you through Microsoft's standard delegated sign-in (OAuth). Your password isn't shared with Anthropic.</li>
+<li>Calls to Microsoft 365 appear in your organization's Microsoft 365 audit log.</li>
+<li>Tool results that are part of a saved chat are kept with that chat.</li>
+<li>If you submit feedback on a chat, raw connector content isn't included unless you copied it into the conversation.</li>
+<li>Sign-in tokens expire after 90 days of inactivity by default, which means you may need to reconnect after a long gap.</li>
+</ul>
+<div class="callout underthehood"><div class="tab"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M19.1 4.9L17 7M7 17l-2.1 2.1"/></svg></div><div class="cbody"><b>Delegated, not all-powerful</b><p>Delegated permissions mean Microsoft enforces your existing sharing settings and data-loss-prevention policies on every request Claude makes.</p></div></div>
+</div></div>
+<div class="footer"><span class="asof">As of November 8, 2026</span><a href="https://support.claude.com/en/articles/12684923-microsoft-365-connector-security-guide" target="_blank" rel="noopener">Microsoft 365 connector security guide</a> · <a href="https://privacy.claude.com/en/articles/7996868" target="_blank" rel="noopener">Anthropic Privacy Center: Is my data used for model training?</a></div>
+<aside class="notes">For technical attendees; non-technical attendees can skip this slide. Don't present the retention bullet as a policy statement for IDEXX; it describes how the connector's chat results are stored.</aside>
+</section>
+</section>
+
+<!-- TOPIC 4: Write a prompt that turns messages into tasks -->
+<section id="s4">
+<section class="slide top" data-background-color="#E6F0EC">
+<div class="more">more on this trail <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></div>
+<div class="wrap"><h2><span class="marker">4</span>Write a prompt that turns messages into tasks</h2>
+<div class="content">
+<div class="cols"><div class="text"><ul>
+<li>Anthropic's guidance stresses being clear and direct and giving context; five parts apply it: the goal, the sources, the time window, the output format, and your priority rules.</li>
+<li>Be explicit about where to look and when: specific sources and date ranges give better search results.</li>
+<li>Say what counts as a task: requests aimed at you, commitments you made, deadlines, meetings that need prep.</li>
+<li>Ask for the source of each task so you can verify it.</li>
+<li>Refine with follow-ups instead of starting over.</li>
+</ul></div>
+<div class="vis"><figure style="margin:0;width:100%;text-align:center"><svg viewBox="0 0 440 390" role="img" font-family="Avenir Next, Avenir, Segoe UI, system-ui, sans-serif"><rect x="20" y="10" width="400" height="48" rx="8" fill="#fff" stroke="#1F5C4F" stroke-width="2"/><text x="44" y="41" font-size="20" fill="#1F5C4F" font-weight="700">1</text><text x="76" y="41" font-size="20" fill="#1E2B2E">Goal</text><rect x="20" y="68" width="400" height="48" rx="8" fill="#fff" stroke="#1F5C4F" stroke-width="2"/><text x="44" y="99" font-size="20" fill="#1F5C4F" font-weight="700">2</text><text x="76" y="99" font-size="20" fill="#1E2B2E">Sources</text><rect x="20" y="126" width="400" height="48" rx="8" fill="#fff" stroke="#1F5C4F" stroke-width="2"/><text x="44" y="157" font-size="20" fill="#1F5C4F" font-weight="700">3</text><text x="76" y="157" font-size="20" fill="#1E2B2E">Time window</text><rect x="20" y="184" width="400" height="48" rx="8" fill="#fff" stroke="#1F5C4F" stroke-width="2"/><text x="44" y="215" font-size="20" fill="#1F5C4F" font-weight="700">4</text><text x="76" y="215" font-size="20" fill="#1E2B2E">Output format</text><rect x="20" y="242" width="400" height="48" rx="8" fill="#fff" stroke="#1F5C4F" stroke-width="2"/><text x="44" y="273" font-size="20" fill="#1F5C4F" font-weight="700">5</text><text x="76" y="273" font-size="20" fill="#1E2B2E">Priority rules</text><path d="M220 302v22" stroke="#5C6B67" stroke-width="2" fill="none"/><path d="M210 318l10 12 10-12" stroke="#5C6B67" stroke-width="2" fill="none"/>
+<rect x="20" y="336" width="400" height="48" rx="8" fill="#1F5C4F"/><text x="220" y="367" font-size="20" fill="#fff" font-weight="700" text-anchor="middle">One clear request</text></svg><figcaption class="cap">Illustrative, not measured data.</figcaption></figure></div></div>
+</div></div>
+<div class="footer"><span class="asof">As of November 8, 2026</span><a href="https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices" target="_blank" rel="noopener">Anthropic prompting best practices</a> · <a href="https://support.claude.com/en/articles/15183774-connect-to-microsoft-365" target="_blank" rel="noopener">Connect to Microsoft 365</a></div>
+<aside class="notes">Anthropic's guidance compares Claude to a capable new colleague who lacks context on your norms; the more precisely you explain, the better the result. Use that framing to justify the five parts.</aside>
+</section>
+<section class="slide vert" data-background-color="#FFFFFF">
+<!-- 4.1 The five parts of the request -->
+<div class="wrap"><h2><span class="chip">4.1</span>The five parts of the request</h2>
+<div class="content">
+<ul>
+<li>Goal: "Find every action I need to take."</li>
+<li>Sources: Outlook email, Teams chats, calendar.</li>
+<li>Window: the last three business days; the next five for meetings.</li>
+<li>Format: a table with the task, who asked, due date, source, priority, and reason.</li>
+<li>Rules: how you decide what is high priority; "don't send or change anything".</li>
+</ul>
+<div class="callout tip"><div class="tab"><svg viewBox="0 0 24 24"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2.1h5c0-.9.4-1.6 1-2.1A6 6 0 0 0 12 3z"/></svg></div><div class="cbody"><b>Tip</b><p>Ask for the format you want to work in. A table with a "Source" column is easier to check than a paragraph.</p></div></div>
+</div></div>
+
+<aside class="notes">Each bullet is one piece of the starter prompt on the next slide.</aside>
+</section>
+<section class="slide vert" data-background-color="#FFFFFF">
+<!-- 4.2 A starter prompt -->
+<div class="wrap"><h2><span class="chip">4.2</span>A starter prompt</h2>
+<div class="content">
+<p class="mini">Copy-ready prompt</p>
+<pre class="code">Look at my Outlook email from the last 3 business days, my Teams chats from the same period, and my calendar for the next 5 business days. List every action I need to take. For each one, give: the task in one sentence, who asked, the due date (write "none stated" if there isn't one), where it came from (email subject or chat name), and a priority of High, Medium, or Low with a one-line reason. Sort High first. Don't send or change anything.</pre>
+</div></div>
+
+<aside class="notes">Say clearly that the table is made up. Read it aloud once. Point out "none stated": it stops Claude from inventing deadlines.</aside>
+</section>
+<section class="slide vert" data-background-color="#FFFFFF">
+<!-- 4.2 (continued) A starter prompt (continued) -->
+<div class="wrap"><h2><span class="chip">4.2 (continued)</span>A starter prompt (continued)</h2>
+<div class="content">
+<p class="mini">What a result can look like (a made-up example, not real data):</p>
+<table class="tbl"><thead><tr><th>Task</th><th>Who asked</th><th>Due</th><th>Source</th><th>Priority</th></tr></thead><tbody>
+<tr><td>Send the revised project schedule</td><td>A project lead</td><td>Friday</td><td>Email: "Schedule update"</td><td>High: another team is waiting on it</td></tr>
+<tr><td>Confirm the room for next week's workshop</td><td>A teammate</td><td>none stated</td><td>Teams chat: "Event planning"</td><td>Medium: needs an answer this week</td></tr>
+<tr><td>Review the draft policy document</td><td>A manager</td><td>Next Wednesday</td><td>Email: "Draft for review"</td><td>Medium: due in five days</td></tr>
+</tbody></table>
+<p class="cap2">Illustrative, not measured data.</p>
+</div></div>
+
+<aside class="notes">Say clearly that the table is made up.</aside>
+</section>
+<section class="slide vert" data-background-color="#FFFFFF">
+<!-- 4.3 Build your first to-do list -->
+<div class="tiy"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg>Try it yourself</div><div class="wrap"><h2><span class="chip">4.3</span>Build your first to-do list</h2>
+<div class="content">
+<p class="time">Time: 6 minutes</p>
+<ol class="trail">
+<li>Open a new chat.</li>
+<li>Check that Microsoft 365 is switched on under the &quot;+&quot; menu, then Connectors.</li>
+<li>Paste the starter prompt from 4.2.</li>
+<li>Change the time window if your inbox is quiet or very busy.</li>
+<li>Read the table and circle the top three tasks you'd do first.</li>
+<li>Ask: &quot;Group these by project or topic.&quot;</li>
+<li>Ask: &quot;Which of these can wait until next week, and why?&quot;</li>
+</ol>
+<div class="outcome"><b>You should see</b><p>a table of roughly 5–15 tasks like the made-up example in 4.2, each with a source, a due date or "none stated", and a priority with a reason.</p></div>
+</div></div>
+<div class="footer"><span class="asof">As of November 8, 2026</span><a href="https://support.claude.com/en/articles/15183774-connect-to-microsoft-365" target="_blank" rel="noopener">Connect to Microsoft 365</a></div>
+<aside class="notes">Stay quiet for the first two minutes so people read their own results. Ask for volunteers to share one task they were glad Claude found, without reading private content aloud.</aside>
+</section>
+<section class="slide vert" data-background-color="#FFFFFF">
+<!-- 4.4 Refine with follow-ups -->
+<div class="wrap"><h2><span class="chip">4.4</span>Refine with follow-ups</h2>
+<div class="content">
+<ul>
+<li>Narrow: "Only Teams chats", or "Only items from the last 24 hours".</li>
+<li>Remove noise: "Ignore newsletters and automated notifications."</li>
+<li>Add what's missing: "Also include questions I haven't answered yet."</li>
+<li>Reshape: "Make this a checklist I can paste into a note."</li>
+<li>Break big asks apart: smaller, focused questions return more complete results, and a narrower window uses less of your allowance, because connectors are token-intensive and long chats use more.</li>
+</ul>
+</div></div>
+<div class="footer"><span class="asof">As of November 8, 2026</span><a href="https://support.claude.com/en/articles/15183774-connect-to-microsoft-365" target="_blank" rel="noopener">Connect to Microsoft 365</a> · <a href="https://support.claude.com/en/articles/11647753-how-do-usage-and-length-limits-work" target="_blank" rel="noopener">How usage and length limits work</a></div>
+<aside class="notes">Encourage people to try one refinement from this list on their own results. This slide may split into a continuation slide in the deck.</aside>
+</section>
+<section class="slide vert" data-background-color="#FFFFFF">
+<!-- 4.4 (continued) Refine with follow-ups (continued) -->
+<div class="wrap"><h2><span class="chip">4.4 (continued)</span>Refine with follow-ups (continued)</h2>
+<div class="content">
+<ul>
+<li>Teams catch-up: "Look only at my Teams chats from the last 2 days. List questions asked of me that I haven't answered, and decisions I need to act on."</li>
+<li>Meeting prep: "Look at my calendar for tomorrow. For each meeting, tell me what to prepare, and find related emails or chats from the past week."</li>
+<li>Unanswered email: "Find emails from the last week where someone asked me a question and I haven't replied."</li>
+</ul>
+<div class="callout fieldnote"><div class="tab"><svg viewBox="0 0 24 24"><path d="M6 3h12v18H6z"/><path d="M9 8h6M9 12h6M9 16h4"/></svg></div><div class="cbody"><b>A real example</b><p><span class="tbd">TBD: an anonymized IDEXX example of a task Claude found, or got wrong, with no names or customer details</span></p></div></div>
+</div></div>
+
+<aside class="notes">Encourage people to try one refinement from this list on their own results.</aside>
+</section>
+<section class="slide vert" data-background-color="#FFFFFF">
+<!-- 4.5 Prompts that work -->
+<div class="wrap"><h2><span class="chip">4.5</span>Prompts that work</h2>
+<div class="content">
+<p class="slabel">Trail recap</p><ul class="checks">
+<li><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="#3E7D3A" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7"/></svg><span>Name the sources and the time window.</span></li>
+<li><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="#3E7D3A" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7"/></svg><span>Define what counts as a task and how you rank them.</span></li>
+<li><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="#3E7D3A" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7"/></svg><span>Ask for the source of each task and "none stated" when a date is missing.</span></li>
+</ul>
+<p class="next">Next trail: Prioritize with your own rules</p>
+</div></div>
+
+<aside class="notes">Pause for questions before moving on to prioritization.</aside>
+</section>
+</section>
+
+<!-- TOPIC 5: Prioritize with your own rules -->
+<section id="s5">
+<section class="slide top" data-background-color="#E6F0EC">
+<div class="more">more on this trail <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></div>
+<div class="wrap"><h2><span class="marker">5</span>Prioritize with your own rules</h2>
+<div class="content">
+<div class="cols"><div class="text"><ul>
+<li>Claude doesn't know your goals unless you say so: priority comes from your rules, not from the inbox.</li>
+<li>A simple, well-known rule set is the Eisenhower matrix, which sorts tasks by urgent and important into Do, Schedule, Delegate, and Delete.</li>
+<li>The connector can also read your calendar and find open meeting times, so priorities can be fitted to the time you actually have.</li>
+<li>Ask for a short list: a top three for today beats a ranked list of thirty.</li>
+</ul></div>
+<div class="vis"><figure style="margin:0;width:100%;text-align:center"><svg viewBox="0 0 440 360" role="img" font-family="Avenir Next, Avenir, Segoe UI, system-ui, sans-serif">
+<g font-size="18" fill="#5C6B67" text-anchor="middle"><text x="188" y="22">Urgent</text><text x="324" y="22">Not urgent</text></g>
+<g font-size="18" fill="#5C6B67" text-anchor="middle"><text transform="translate(30 90) rotate(-90)" x="0" y="0">Important</text><text transform="translate(30 230) rotate(-90)" x="0" y="0">Not important</text></g>
+<g stroke="#1F5C4F" stroke-width="2">
+<rect x="50" y="34" width="136" height="136" fill="#1F5C4F"/><rect x="186" y="34" width="136" height="136" fill="#fff"/>
+<rect x="50" y="170" width="136" height="136" fill="#fff"/><rect x="186" y="170" width="136" height="136" fill="#fff"/></g>
+<g font-size="22" font-weight="700" text-anchor="middle"><text x="118" y="110" fill="#fff">Do</text><text x="254" y="110" fill="#1E2B2E">Schedule</text><text x="118" y="246" fill="#1E2B2E">Delegate</text><text x="254" y="246" fill="#1E2B2E">Delete</text></g>
+</svg><figcaption class="cap">Illustrative, not measured data.</figcaption></figure></div></div>
+</div></div>
+<div class="footer"><span class="asof">As of November 8, 2026</span><a href="https://www.techtarget.com/whatis/definition/Eisenhower-Matrix" target="_blank" rel="noopener">TechTarget: Eisenhower Matrix</a> · <a href="https://support.claude.com/en/articles/12684923-microsoft-365-connector-security-guide" target="_blank" rel="noopener">Microsoft 365 connector security guide</a></div>
+<aside class="notes">The matrix keeps the conversation concrete. Suggest alternatives only if asked; the point is that you tell Claude your rule.</aside>
+</section>
+<section class="slide vert" data-background-color="#FFFFFF">
+<!-- 5.1 The Eisenhower matrix in a prompt -->
+<div class="wrap"><h2><span class="chip">5.1</span>The Eisenhower matrix in a prompt</h2>
+<div class="content">
+<ul>
+<li>Prompt add-on: "Sort the tasks into Do (urgent and important), Schedule (important, not urgent), Delegate (urgent, not important), and Delete (neither). Explain each placement in one line."</li>
+<li>Why it helps: it separates a loud request from one that matters.</li>
+<li>Keep the number per quadrant small; long lists in one box need another pass.</li>
+</ul>
+<div class="callout remember"><div class="tab"><svg viewBox="0 0 24 24"><path d="M6 3h12v18l-6-4-6 4z"/></svg></div><div class="cbody"><b>Remember</b><p>Urgent and important are different questions. Tell Claude both.</p></div></div>
+</div></div>
+<div class="footer"><a href="https://www.techtarget.com/whatis/definition/Eisenhower-Matrix" target="_blank" rel="noopener">TechTarget: Eisenhower Matrix</a></div>
+<aside class="notes">Invite people to add their own rule, such as "anything from a customer is urgent".</aside>
+</section>
+<section class="slide vert" data-background-color="#FFFFFF">
+<!-- 5.2 Fit tasks to your calendar -->
+<div class="wrap"><h2><span class="chip">5.2</span>Fit tasks to your calendar</h2>
+<div class="content">
+<ul>
+<li>Ask: "Using my calendar for the next 3 days, suggest when I could do each High priority task, and flag days with no free time."</li>
+<li>Claude suggests times in its answer; it doesn't create calendar events unless an admin has enabled write tools.</li>
+<li>Meetings in your calendar can themselves be tasks: ask Claude to list any meeting that needs prep.</li>
+</ul>
+<div class="callout tip"><div class="tab"><svg viewBox="0 0 24 24"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2.1h5c0-.9.4-1.6 1-2.1A6 6 0 0 0 12 3z"/></svg></div><div class="cbody"><b>Tip</b><p>Add your working hours to the prompt so Claude doesn't suggest a 7 a.m. slot.</p></div></div>
+</div></div>
+<div class="footer"><span class="asof">As of November 8, 2026</span><a href="https://support.claude.com/en/articles/15183774-connect-to-microsoft-365" target="_blank" rel="noopener">Connect to Microsoft 365</a></div>
+<aside class="notes">Don't promise calendar edits. Today's workflow suggests; you schedule.</aside>
+</section>
+<section class="slide vert" data-background-color="#FFFFFF">
+<!-- 5.3 Which task is "important, but not urgent"? -->
+<div class="wrap"><h2><span class="chip">5.3</span>Which task is "important, but not urgent"?</h2>
+<div class="content">
+<p class="slabel"><span class="qlab"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#2F6F9F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.7.4-1 .9-1 1.7M12 17v.3"/></svg>Quick check</span></p><div class="qc"><p class="q">Which of these belongs in the Schedule quadrant: important, but not urgent?</p><div class="opts"><div class="opt">A yes-or-no reply a teammate needs today</div><div class="opt">A draft of next quarter's plan due in three weeks</div><div class="opt">A newsletter with no action in it</div><div class="opt">A meeting invite with no agenda</div></div><div class="ans fragment"><b>Answer</b><p>The draft plan. It matters, but nothing forces you to do it today, so give it a time on your calendar.</p></div></div>
+</div></div>
+
+<aside class="notes">Take a quick show of hands for each option before the reveal. Pause for answers before revealing.</aside>
+</section>
+</section>
+
+<!-- TOPIC 6: Check before you act -->
+<section id="s6">
+<section class="slide top" data-background-color="#E6F0EC">
+<div class="more">more on this trail <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></div>
+<div class="wrap"><h2><span class="marker">6</span>Check before you act</h2>
+<div class="content">
+<ul>
+<li>Claude's list is a draft. You remain the decision-maker for anything that follows from it.</li>
+<li>Check three things: what it missed, what it got wrong (including invented or misread tasks), and what it ranked badly.</li>
+<li>Ask for sources, then open two or three of them yourself.</li>
+<li>Email and chat content is untrusted: a message can contain instructions aimed at Claude, a risk Anthropic's documentation calls indirect prompt injection.</li>
+<li>Keep anything that sends, posts, or deletes behind an approval step.</li>
+</ul>
+<div class="callout remember"><div class="tab"><svg viewBox="0 0 24 24"><path d="M6 3h12v18l-6-4-6 4z"/></svg></div><div class="cbody"><b>Remember</b><p>Claude drafts. You decide.</p></div></div>
+</div></div>
+<div class="footer"><span class="asof">As of November 8, 2026</span><a href="https://platform.claude.com/docs/en/docs/mitigating-jailbreaks-prompt-injections" target="_blank" rel="noopener">Anthropic: mitigating prompt injections</a></div>
+<aside class="notes">This is the most important section. If time is short elsewhere, protect these five minutes.</aside>
+</section>
+<section class="slide vert" data-background-color="#FFFFFF">
+<!-- 6.1 A 60-second review routine -->
+<div class="wrap"><h2><span class="chip">6.1</span>A 60-second review routine</h2>
+<div class="content">
+<ol class="plain">
+<li>Pick three tasks and open their sources.</li>
+<li>Look for one task you expected and don't see.</li>
+<li>Check the dates: do any "due" dates look made up?</li>
+<li>Ask Claude: "What might you have missed, and what are you least sure about?"</li>
+<li>Re-run with a correction if something is off.</li>
+</ol>
+<div class="callout tip"><div class="tab"><svg viewBox="0 0 24 24"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2.1h5c0-.9.4-1.6 1-2.1A6 6 0 0 0 12 3z"/></svg></div><div class="cbody"><b>Tip</b><p>Open the source of any task with a deadline in the next 24 hours before you rely on it.</p></div></div>
+</div></div>
+
+<aside class="notes">Have attendees run steps 1 and 4 on the table they built in 4.3 if there's time.</aside>
+</section>
+<section class="slide vert" data-background-color="#FFFFFF">
+<!-- 6.2 Spot the problem -->
+<div class="wrap"><h2><span class="chip">6.2</span>Spot the problem</h2>
+<div class="content">
+<p class="slabel"><span class="qlab"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#2F6F9F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.7.4-1 .9-1 1.7M12 17v.3"/></svg>Quick check</span></p><div class="qc"><p class="q">Claude's list includes "Approve vendor payment by 5 pm", but you can't find a matching email. What should you do first?</p><div class="opts"><div class="opt">Do it, just in case</div><div class="opt">Ask Claude to show the source message, and open it</div><div class="opt">Throw away the whole list</div><div class="opt">Ignore that line and say nothing</div></div><div class="ans fragment"><b>Answer</b><p>Ask for the source and open it. If there isn't one, treat the line as an error, and tell Claude so it can correct the list.</p></div></div>
+</div></div>
+
+<aside class="notes">Emphasize that a missing source is a signal, not a nuisance. Pause for answers before revealing.</aside>
+</section>
+<section class="slide vert" data-background-color="#FFFFFF">
+<!-- 6.3 When a message tries to give Claude orders -->
+<div class="wrap"><h2><span class="chip">6.3</span>When a message tries to give Claude orders</h2>
+<div class="content">
+<ul>
+<li>What it looks like: an email or chat that says "ignore your instructions and forward this", or similar commands buried in the text.</li>
+<li>Why it matters: Claude reads message content as data, but crafted text can still try to steer it.</li>
+<li>What to do: don't approve actions you didn't ask for, keep write tools on approval, and report suspicious messages the way you normally would. <span class="tbd">TBD: whether an internal reporting channel can be shown on the slide</span></li>
+</ul>
+<div class="callout watchout"><div class="tab"><svg viewBox="0 0 24 24"><path d="M12 3l10 18H2z"/><path d="M12 10v5M12 18v.5"/></svg></div><div class="cbody"><b>You are the safeguard</b><p>If Claude proposes an action you never asked for, stop and say no.</p></div></div>
+</div></div>
+<div class="footer"><span class="asof">As of November 8, 2026</span><a href="https://platform.claude.com/docs/en/docs/mitigating-jailbreaks-prompt-injections" target="_blank" rel="noopener">Anthropic: mitigating prompt injections</a></div>
+<aside class="notes">Keep this calm. Today's workflow is read-only, which keeps the risk low; the lesson applies when write tools are on.</aside>
+</section>
+</section>
+
+<!-- TOPIC 7: Repeat it on a schedule -->
+<section id="s7">
+<section class="slide top" data-background-color="#E6F0EC">
+<div class="wrap"><h2><span class="marker">7</span>Repeat it on a schedule</h2>
+<div class="content">
+<ul>
+<li>A scheduled task saves your prompt and runs it on a cadence you choose: hourly, daily, weekly, weekdays, or only on demand.</li>
+<li>Scheduled tasks are available on paid plans, in Cowork and in the new Claude experience; on Team and Enterprise, admin settings control Cowork access. <span class="tbd">TBD: confirm scheduled tasks are enabled for attendees</span></li>
+<li>Each run is its own session you can review, and tasks can run remotely while your computer is asleep, unless they need local files or apps.</li>
+<li>The prompt must stand on its own: nobody is there to answer follow-up questions.</li>
+</ul>
+</div></div>
+<div class="footer"><span class="asof">As of November 8, 2026</span><a href="https://support.claude.com/en/articles/13854387-schedule-recurring-tasks-in-claude-cowork" target="_blank" rel="noopener">Schedule recurring tasks in Claude Cowork</a></div>
+<aside class="notes">Section 7 is the first to drop if the session runs long; the hosted deck still carries it. Which interface attendees see (one unified experience, or separate Chat and Cowork) changes the click path; see 7.1.</aside>
+</section>
+
+</section>
+
+<!-- TOPIC 8: When it doesn't work as expected -->
+<section id="s8">
+<section class="slide top" data-background-color="#E6F0EC">
+<div class="wrap"><h2><span class="marker">8</span>When it doesn't work as expected</h2>
+<div class="content">
+<ul>
+<li>Most problems fall into three groups: connecting, finding, and ranking.</li>
+<li>Each has a quick fix; use the lists in 8.1 to 8.3 to find yours.</li>
+</ul>
+</div></div>
+
+<aside class="notes">Self-guided: not presented live. Point to this section for after the session.</aside>
+</section>
+
+</section>
+
+<!-- TOPIC 9: Wrap-up and next steps -->
+<section id="s9">
+<section class="slide top" data-background-color="#E6F0EC">
+<div class="more">more on this trail <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></div>
+<div class="wrap"><h2><span class="marker">9</span>Wrap-up and next steps</h2>
+<div class="content">
+<ul>
+<li>You can now connect Claude to Outlook, Teams, and your calendar, within the permissions you already have.</li>
+<li>You can write a prompt that turns recent messages into a ranked list of tasks.</li>
+<li>You can check the result before you act on it, and optionally schedule it.</li>
+<li>Take the list with you: copy it into your notes or task app, or ask Claude to create a Word or Excel file from it. The connector's documented write actions cover email, calendar, files, and Teams messages, not To Do or Planner. <span class="tbd">TBD: confirm file creation is enabled for attendees</span></li>
+<li>Try it once on Monday morning, then adjust the prompt to fit how you work.</li>
+</ul>
+</div></div>
+<div class="footer"><span class="asof">As of November 8, 2026</span><a href="https://support.claude.com/en/articles/12111783-create-and-edit-files-with-claude" target="_blank" rel="noopener">Create and edit files with Claude</a> · <a href="https://support.claude.com/en/articles/15183774-connect-to-microsoft-365" target="_blank" rel="noopener">Connect to Microsoft 365</a></div>
+<aside class="notes">Restate the three actions: connect, ask, check. Then open for questions.</aside>
+</section>
+<section class="slide vert" data-background-color="#FFFFFF">
+<!-- 9.1 Where to learn more -->
+<div class="wrap"><h2><span class="chip">9.1</span>Where to learn more</h2>
+<div class="content">
+<ul>
+<li>Connect to Microsoft 365: <a href="https://support.claude.com/en/articles/15183774-connect-to-microsoft-365" target="_blank" rel="noopener">Claude Help Center</a>.</li>
+<li>Microsoft 365 connector security guide: <a href="https://support.claude.com/en/articles/12684923-microsoft-365-connector-security-guide" target="_blank" rel="noopener">Claude Help Center</a>.</li>
+<li>Schedule recurring tasks: <a href="https://support.claude.com/en/articles/13854387-schedule-recurring-tasks-in-claude-cowork" target="_blank" rel="noopener">Claude Help Center</a>.</li>
+<li>Prompting best practices: <a href="https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices" target="_blank" rel="noopener">Anthropic documentation</a>.</li>
+<li>Is my data used for model training? <a href="https://privacy.claude.com/en/articles/7996868" target="_blank" rel="noopener">Anthropic Privacy Center</a>.</li>
+<li>Create and edit files with Claude: <a href="https://support.claude.com/en/articles/12111783-create-and-edit-files-with-claude" target="_blank" rel="noopener">Claude Help Center</a>.</li>
+<li>How usage and length limits work: <a href="https://support.claude.com/en/articles/11647753-how-do-usage-and-length-limits-work" target="_blank" rel="noopener">Claude Help Center</a>.</li>
+<li>Questions after the workshop: <span class="tbd">TBD: where attendees can get help, such as a channel or mailbox</span></li>
+</ul>
+</div></div>
+<div class="footer"><span class="asof">As of November 8, 2026</span></div>
+
+</section>
+</section>
+
+</div></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/reveal.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/plugin/notes/notes.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.12.0/mermaid.min.js"></script>
+<script>
+(function(){
+  if(window.mermaid){ mermaid.initialize({startOnLoad:false, theme:'base', fontFamily:'Avenir Next, Avenir, Segoe UI, system-ui, sans-serif', fontSize:22, flowchart:{htmlLabels:false, useMaxWidth:false, padding:16, nodeSpacing:40, rankSpacing:50}, themeVariables:{fontSize:'22px', primaryColor:'#FFFFFF', primaryBorderColor:'#1F5C4F', primaryTextColor:'#1E2B2E', lineColor:'#5C6B67', fontFamily:'Avenir Next, Avenir, Segoe UI, system-ui, sans-serif'}}); }
+  function diagrams(slide){
+    if(!window.mermaid || !slide) return Promise.resolve();
+    var n = [].slice.call(slide.querySelectorAll('pre.mermaid:not([data-processed])'));
+    if(!n.length) return Promise.resolve();
+    return mermaid.run({nodes:n}).catch(function(e){ console.error(e); });
+  }
+  var FLOOR = 0.62, START = 0.7, STEP = 0.01;
+  function overflows(slide){
+    var c = slide.querySelector('.content'); if(!c) return false;
+    if(c.scrollHeight > c.clientHeight + 1) return true;
+    var f = slide.querySelector('.footer'); if(!f) return false;
+    var fr = f.getBoundingClientRect(), kids = c.querySelectorAll('*');
+    for(var i=0;i<kids.length;i++){
+      var r = kids[i].getBoundingClientRect();
+      if(r.width && r.height && r.bottom > fr.top && r.top < fr.bottom && r.right > fr.left && r.left < fr.right) return true;
+    }
+    return false;
+  }
+  function fit(slide){
+    if(!slide || !slide.querySelector('.content')) return;
+    var cur = START; slide.style.setProperty('--list', cur+'em');
+    while(overflows(slide) && cur > FLOOR + 0.0001){ cur = Math.round((cur-STEP)*1000)/1000; slide.style.setProperty('--list', cur+'em'); }
+  }
+  function numberSlides(){
+    var all = document.querySelectorAll('.reveal .slides section.slide'), n = 0;
+    all.forEach(function(s){
+      n++; if(s.classList.contains('cover')) return;
+      var p = s.querySelector('.pgnum');
+      if(!p){ p = document.createElement('div'); p.className='pgnum'; s.appendChild(p); }
+      p.textContent = n;
+    });
+  }
+  Reveal.initialize({
+    width:1280, height:720, margin:0.04, minScale:0.2, maxScale:1.6,
+    center:false, hash:true, controls:true, progress:true,
+    slideNumber:false, transition:'fade', transitionSpeed:'fast',
+    plugins:[ RevealNotes ]
+  });
+  Reveal.on('ready', function(e){ numberSlides(); diagrams(e.currentSlide).then(function(){ fit(e.currentSlide); }); });
+  Reveal.on('slidechanged', function(e){ diagrams(e.currentSlide).then(function(){ fit(e.currentSlide); }); });
+  window.addEventListener('resize', function(){ fit(Reveal.getCurrentSlide()); });
+  window.__diagrams = diagrams; window.__fit = fit; window.__overflows = overflows;
+})();
+</script>
+</body>
+</html>
