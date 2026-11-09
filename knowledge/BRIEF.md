@@ -56,10 +56,10 @@ Knowledge files the presenter collected. They are leads, not the scope.
   - Adapting it: your own brand, other output types
 
 ## Style
-- **Active style guide:** STYLE-FIELD-GUIDE.md
+- **Active style guide:** STYLE-TOONS.md
 - **Brand overrides, if any:** [TBD: IDEXX brand, or none]
 - **Callouts to emphasize or avoid:** Emphasize Tip and Quick check, since the session abstract promises "tips and quizzes"
 
 ## Deck
-- **Deck file name:** outline-first.html
+- **Deck file name:** outline-first-toons.html
 - **Attribution rules beyond the default:** None
