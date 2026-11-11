@@ -20,7 +20,7 @@ How OUTLINE.md is structured and tagged, and exactly what Phase 2 does with each
 | Working aids | `[Seed]`, `[Research]`, `[All]`, `[Core]`, Coverage gaps | End of a heading or bullet; whole outline-only sections | **Stripped** |
 | Content markers | `Speaker notes:`, `As of …`, `[UNVERIFIED]`, `[TBD: …]`, source links | Inside bullets | **Rendered** by every style guide |
 | Base slide type | `[Try it yourself]` | In a heading | **Rendered** by every style guide |
-| Visual directives | `Suggested visual:`, fenced `mermaid` block | Own bullet or block | **Rendered** as a designed visual |
+| Visual directives | `Suggested visual:`, fenced `mermaid` block, `Embed:` | Own bullet or block | **Rendered** as a designed visual or a live frame |
 | Style callouts | `> [!TIP]`, `> [!WATCHOUT]` | Block quote inside a slide | **Rendered** per the active style guide |
 | Style slide types | `[Quick check]`, `[Recap]` | In a heading | **Rendered** per the active style guide |
 
@@ -70,6 +70,7 @@ Phase 2: a consistent badge (top-right by default; the style guide may restyle i
   ````
 
   Keep diagrams to about seven nodes; anything bigger belongs on its own slide. To emphasize nodes, use a class name the style guide defines (`class B key`); the build adds that guide's `classDef` lines.
+- `Embed: path` shows a live page in a frame on that slide. An optional `Fallback:` line gives text for a viewer whose frame stays blank. Use it only for a page you host yourself: most sites refuse to be framed. Phase 2 draws a 16:9 frame that loads when the slide is shown, and shows the fallback as a small line under it. The path is relative to the deck, so a hosted deck needs the embedded page hosted in the same relative place. An `Embed:` with no path is reported, not guessed.
 
 ## 7. Style tags (defined by the active style guide)
 

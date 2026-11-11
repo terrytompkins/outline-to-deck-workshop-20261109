@@ -1,0 +1,95 @@
+</div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/reveal.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/plugin/notes/notes.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.12.0/mermaid.min.js"></script>
+<script>
+Reveal.initialize({
+  width: 1280, height: 720, margin: 0.04, minScale: 0.2, maxScale: 1.6,
+  center: false, hash: true, controls: true, progress: true,
+  slideNumber: false, transition: 'fade', transitionSpeed: 'fast',
+  plugins: [ RevealNotes ]
+});
+
+// Page numbers drawn inside each slide (Reveal's own number collides with the arrows).
+function addPageNumbers(){
+  var all = Reveal.getSlides(), n = all.length;
+  all.forEach(function(sl, i){
+    if (sl.id === 'title' || sl.querySelector(':scope > .pgnum')) return;
+    var p = document.createElement('div'); p.className = 'pgnum'; p.textContent = (i + 1) + ' / ' + n; sl.appendChild(p);
+  });
+}
+
+// Shrink a slide's text only until nothing overflows and nothing overlaps the footer.
+function fitSlide(s){
+  if (!s || s.classList.contains('stack')) return;
+  s.style.fontSize = '';
+  var f = 1;
+  function tooTall(){
+    if (s.scrollHeight > s.clientHeight + 2) return true;
+    var ft = s.querySelector(':scope > footer');
+    var limit = ft ? ft.offsetTop - 6 : s.clientHeight - 64;
+    var kids = s.querySelectorAll(':scope > *:not(footer):not(aside):not(.pgnum):not(.more):not(.tiy):not(.chrome)');
+    for (var i = 0; i < kids.length; i++){ if (kids[i].offsetTop + kids[i].offsetHeight > limit) return true; }
+    return false;
+  }
+  while (tooTall() && f > 0.62){ f -= 0.03; s.style.fontSize = f + 'em'; }
+}
+
+// Mermaid renders badly in hidden slides, so each diagram renders when its slide is first shown.
+if (window.mermaid) {
+  mermaid.initialize({
+    startOnLoad: false, securityLevel: 'strict', theme: 'base', htmlLabels: false,
+    // SVG labels: HTML labels are measured after Reveal scales the slide, so their text is clipped.
+    flowchart: { curve: 'basis', htmlLabels: false, useMaxWidth: true, nodeSpacing: 34, rankSpacing: 60, padding: 14 },
+    themeVariables: {
+      fontFamily: '"Avenir Next", Avenir, "Segoe UI", system-ui, sans-serif', fontSize: '20px',
+      primaryColor: '#FFFFFF', primaryBorderColor: '#1F5C4F', primaryTextColor: '#1E2B2E',
+      lineColor: '#5C6B67', edgeLabelBackground: '#FFFFFF'
+    }
+  });
+}
+function renderDiagrams(slide){
+  if (!window.mermaid || !slide) return;
+  var nodes = Array.prototype.slice.call(slide.querySelectorAll('pre.mermaid:not([data-processed])'));
+  if (!nodes.length) return;
+  mermaid.run({ nodes: nodes }).catch(function(err){ console.error('Mermaid:', err); }).then(function(){
+    nodes.forEach(function(n){ var svg = n.querySelector('svg'); if (svg) tidySelfLoops(svg); });
+    fitSlide(slide);
+  });
+}
+
+// Mermaid's dagre layout draws a self-loop (A --> A) through two dummy nodes placed one and two
+// ranks away, so the loop runs far from its node. Redraw each self-loop as a short arc above
+// its node and put its label on the arc. Nodes and labels do not change.
+function tidySelfLoops(svg){
+  svg.querySelectorAll('path[id$="-cyclic-special-1"]').forEach(function(p1){
+    var base = p1.id.slice(0, -'-cyclic-special-1'.length);
+    var mid = svg.querySelector('path[id="' + base + '-cyclic-special-mid"]');
+    var p2 = svg.querySelector('path[id="' + base + '-cyclic-special-2"]');
+    var node = Array.prototype.find.call(svg.querySelectorAll('g.node'), function(g){
+      return g.id.indexOf('flowchart-' + base + '-') === 0 && /^\d+$/.test(g.id.slice(('flowchart-' + base + '-').length));
+    });
+    if (!mid || !p2 || !node) return;
+    var parts = [p1, mid, p2];
+    var arrow = parts.filter(function(p){ return p.getAttribute('marker-end'); })[0] || p2;
+    var box = node.getBBox(), m = node.transform.baseVal.consolidate();
+    var tx = m ? m.matrix.e : 0, ty = m ? m.matrix.f : 0;
+    var cx = tx + box.x + box.width / 2, top = ty + box.y, dx = box.width * 0.22, h = 54;
+    arrow.setAttribute('d', 'M' + (cx + dx) + ',' + top + ' C' + (cx + dx + 26) + ',' + (top - h) + ' ' +
+      (cx - dx - 26) + ',' + (top - h) + ' ' + (cx - dx) + ',' + (top - 2));
+    parts.forEach(function(p){ if (p !== arrow) p.style.display = 'none'; });
+    var label = svg.querySelector('.edgeLabel > .label[data-id="' + mid.id + '"]');
+    if (label) label.parentNode.setAttribute('transform', 'translate(' + cx + ',' + (top - 0.75 * h) + ')');
+    var vb = svg.viewBox.baseVal, need = top - h - 18;
+    if (vb && need < vb.y) { svg.setAttribute('viewBox', [vb.x, need, vb.width, vb.height + (vb.y - need)].join(' ')); }
+  });
+}
+
+Reveal.on('ready', function(e){ addPageNumbers(); fitSlide(e.currentSlide); renderDiagrams(e.currentSlide); });
+Reveal.on('slidechanged', function(e){ fitSlide(e.currentSlide); renderDiagrams(e.currentSlide); });
+window.addEventListener('resize', function(){ fitSlide(Reveal.getCurrentSlide()); });
+
+</script>
+</body>
+</html>

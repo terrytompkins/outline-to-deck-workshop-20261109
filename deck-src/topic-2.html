@@ -1,0 +1,60 @@
+<!-- TOPIC 2: Outline first: the method in one picture -->
+<section id="s2">
+<section class="topic" data-background-color="#E6F0EC">
+  <h2><span class="marker">2</span>Outline first: the method in one picture</h2>
+  <ul>
+    <li><b>Phase 1:</b> build a numbered Markdown outline with Claude, and revise it as text until it's right.</li>
+    <li><b>The gate:</b> the presenter approves the outline, and the approval is written down.</li>
+    <li><b>Phase 2:</b> Claude builds the deck from the approved outline.</li>
+    <li>Anthropic gives the same advice for Claude Code: have Claude interview you, write the spec to a file, then build from it in a fresh session.</li>
+  </ul>
+  <figure class="diagram"><pre class="mermaid">
+flowchart LR
+  A[Your notes] --> B[OUTLINE.md]
+  C[BRIEF.md] --> B
+  B -->|revise as text| B
+  B --> D{Approved?}
+  D -->|yes| E[Deck]
+  F[Style guide] --> E
+  class D key
+  classDef key fill:#1F5C4F,stroke:#1F5C4F,color:#FFFFFF
+</pre></figure>
+  <footer><span class="asof">As of November 5, 2026</span><span>Source: <a href="https://code.claude.com/docs/en/best-practices">Best practices for Claude Code</a></span></footer>
+  <div class="more"><svg class="ic" aria-hidden="true"><use href="#i-down"/></svg>more on this trail</div>
+  <aside class="notes">Mention that this deck was built with the same template.</aside>
+</section>
+<section>
+  <h3><span class="num">2.1</span>Phase 1: the outline</h3>
+  <ul>
+    <li>Claude researches the topic. Your notes are leads, not the limit.</li>
+    <li>Each section becomes a slide: top-level sections run across, subsections go below.</li>
+    <li>Revise by section number ("revise 4.2"). From v0.2 on, numbers don't change.</li>
+  </ul>
+  <div class="callout callout--tip"><div class="callout__tab"><svg class="ic" aria-hidden="true"><use href="#i-tip"/></svg></div><div class="callout__body"><b class="callout__label">Tip</b><p>Ask Claude to interview you before it drafts anything, a few questions at a time.</p></div></div>
+  <footer><span>Source: <a href="https://code.claude.com/docs/en/best-practices">Best practices for Claude Code</a></span></footer>
+</section>
+<section>
+  <h3><span class="num">2.2</span>The approval gate</h3>
+  <ul>
+    <li><code>DECISIONS.md</code> is a dated log. Claude's suggestions are Proposed; only the approver makes them Decided.</li>
+    <li>Phase 2 starts only when the log has the approval line.</li>
+  </ul>
+  <div class="callout callout--watchout"><div class="callout__tab"><svg class="ic" aria-hidden="true"><use href="#i-watchout"/></svg></div><div class="callout__body"><b class="callout__label">Watch out</b><p>Without a recorded approval, a casual "can I see one slide?" starts the deck early, and the deck drifts from the outline.</p></div></div>
+</section>
+<section>
+  <h3><span class="num">2.3</span>Phase 2: the deck</h3>
+  <ul>
+    <li>Start a fresh chat. Claude builds from the approved outline as written, without new research.</li>
+    <li>First pass: title, agenda, and every top-level slide. Second pass: the detail slides.</li>
+    <li>Later content changes go to the outline first; then only those slides are rebuilt.</li>
+  </ul>
+</section>
+<section class="st-quiz">
+  <p class="st-label"><svg class="ic" aria-hidden="true"><use href="#i-question"/></svg>Quick check</p>
+  <h3><span class="num">2.4</span>When does Claude start building slides?</h3>
+  <p class="question">You're halfway through the outline and ask, "Can you show me what slide 3 would look like?" What should Claude do?</p>
+  <div class="options"><div>Build slide 3</div><div>Build the whole deck</div><div>Say the outline needs approval first</div></div>
+  <div class="answer fragment"><b>Answer:</b> Say the outline needs approval first. Slides wait for the recorded approval.</div>
+  <aside class="notes">Pause for answers before revealing.</aside>
+</section>
+</section>
