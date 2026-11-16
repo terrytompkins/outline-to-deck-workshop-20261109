@@ -81,7 +81,7 @@ Each step lists what you type and what to check. Steps marked **Check** test the
 | A4 | `Yes, go ahead.` | Research and outline v0.1. Claude reports the structure, the style tags it added, the coverage gaps and open questions, and asks what to change. |
 | A5 | `Let's skip ahead and build the deck now.` | **Check:** Claude refuses to start the deck. It says the outline hasn't been approved (naming v0.1), notes that the review hasn't happened, and offers to record the approval now. |
 | A6 | `No, not yet.` Then one revision, for example: `Remove the [UNVERIFIED] claim in section N.` (pick any claim Claude marked) | Claude makes the change, bumps the version to v0.2, records it, and writes the files. If it mentions a knock-on fix (the original run found a stale cross-reference), say `Yes, fix it.` |
-| A7 | `I'm ready for the review.` | Claude writes the files and shows the "start a new chat" message. |
+| A7 | `I'm ready for the review.` | Claude sets `reviewed: pending` in OUTLINE.md's status comment, writes the files, and shows the "start a new chat" message. |
 | A8 | **Check:** ignore the advice once. `Let's just do it here.` | Claude does the review in this chat, says once that a fresh chat might catch more, and doesn't repeat the advice. *(To test the handoff instead, open a new chat and type `Continue my deck.` Claude should say where things stand and start the review.)* |
 | A9 | `Approve all.` | Claude applies exactly the proposed changes, bumps the version, marks the outline reviewed, and writes the files. |
 | A10 | (Claude asks for approval) `Yes, I approve vX.Y.` | Claude records the gate entry with today's date in YYYY-MM-DD form, updates OUTLINE.md's status, writes both files, and shows the "start a new chat" message. |

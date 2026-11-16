@@ -406,6 +406,7 @@ to a finished deck.</code></pre>
       <tr><td><code>BRIEF.md</code> still has <code>[TBD: …]</code> fields</td><td>Brief</td><td>Interview to fill them</td></tr>
       <tr><td>Outline is still the v0.0 starter</td><td>First outline</td><td>Research and write v0.1</td></tr>
       <tr><td>v0.1 or later, <code>reviewed: no</code></td><td>Refine</td><td>Revise until you're ready for review</td></tr>
+      <tr><td><code>reviewed: pending</code></td><td>Review</td><td>Run the independent review</td></tr>
       <tr><td>Reviewed, no approval entry in <code>DECISIONS.md</code></td><td>Approve</td><td>Ask for your approval</td></tr>
       <tr><td>Approved, <code>deck: none</code></td><td>Deck, pass 1</td><td>Build the horizontal slides</td></tr>
       <tr><td><code>deck: pass 1</code> or <code>core</code></td><td>Deck, pass 2</td><td>Build or finish the vertical slides</td></tr>
@@ -413,7 +414,7 @@ to a finished deck.</code></pre>
     </tbody>
   </table>
   <p class="muted">Guided mode carries on from there. Manual mode names the next step, does only that step, and stops.</p>
-  <aside class="notes">"Continue my deck" works in any chat, in either mode. Claude reads BRIEF.md, OUTLINE.md and DECISIONS.md, tells you where things stand in a line or two, then acts. The three status fields (approved, reviewed, deck) are what make that possible without relying on chat history. An outline started before these fields existed has none of them; Claude works the stage out from DECISIONS.md and the outline's "Changes by version", and asks if it can't tell.</aside>
+  <aside class="notes">"Continue my deck" works in any chat, in either mode. Claude reads BRIEF.md, OUTLINE.md and DECISIONS.md, tells you where things stand in a line or two, then acts. The three status fields (approved, reviewed, deck) are what make that possible without relying on chat history. When you say you're ready for review, Claude sets reviewed: pending before it hands off, so the new chat starts the review instead of asking what to change. An outline started before these fields existed has none of them; Claude works the stage out from DECISIONS.md and the outline's "Changes by version", and asks if it can't tell.</aside>
 </section>
 <section id="s6-2">
   <h3><span class="num">6.2</span>The new-chat handoff</h3>

@@ -32,14 +32,15 @@ Before acting on an open-ended request, and at the start of every guided step, r
 | BRIEF.md still has `[TBD: …]` fields | A. Brief | Interview to fill them |
 | OUTLINE.md is still the v0.0 starter | B. First outline | Research and write v0.1 |
 | Outline v0.1 or later; status says `reviewed: no` | C. Refine | Revise until the presenter is ready for review, then D |
-| Outline reviewed; DECISIONS.md has no gate entry | E. Approve | Ask for approval |
+| Status says `reviewed: pending`; DECISIONS.md has no gate entry | D. Independent review | Run the review (prompt 4) |
+| Outline reviewed (`reviewed:` names a version); DECISIONS.md has no gate entry | E. Approve | Ask for approval |
 | Gate entry present; status says `deck: none` | F. Deck, pass 1 | Build the horizontal slides |
 | `deck: pass 1` or `deck: core` | G. Deck, pass 2 | Build or finish the vertical slides |
 | `deck: complete` | H. After the build | Changes, style switch, or wrap-up |
 
 The status fields are described in section 6. If the files disagree with each other, or a field is missing (an outline started before these fields existed), work it out from DECISIONS.md and the outline's "Changes by version", and ask if it is still unclear.
 
-Then tell the presenter where things stand in one or two lines before doing anything else, for example: "Where we are: outline v0.3, not yet reviewed. Next: an independent review, which works best in a fresh chat."
+Then tell the presenter where things stand in one or two lines before doing anything else, for example: "Where we are: outline v0.3, ready for its independent review. Next: the review."
 
 "Continue my deck" (or any wording that means the same) works in both modes. In guided mode Claude carries on with the flow; in manual mode it names the next step, does that step only, and stops.
 
@@ -51,7 +52,7 @@ If the presenter asks for deck work before the gate entry exists, don't start it
 
 > The outline hasn't been approved yet (current version: v0.4). If you'd like to approve it now, I'll record the decision and we can start on the deck.
 
-If the outline hasn't had its independent review (`reviewed: no`), add one line saying so and offer the review, but leave the choice to the presenter.
+If the outline hasn't had its independent review (`reviewed: no` or `pending`), add one line saying so and offer the review, but leave the choice to the presenter.
 
 **What counts as approval.** The approver named in BRIEF.md says explicitly that they approve a specific version: "Yes, approve v0.4" counts; "looks good" in reply to an unrelated question doesn't. In guided mode Claude asks the question directly ("Do you approve outline v0.4 for the deck?"), so the answer is unambiguous.
 
@@ -80,12 +81,13 @@ Each step lists what Claude does, where it pauses, and what is written. The matc
 - Loop: the presenter asks for changes (by section number where possible); Claude applies them, bumps the version, and records each under "Changes by version".
 - Along the way, offer the presenter the open `[TBD: …]` facts to confirm, and record confirmed ones under "Facts to present" in DECISIONS.md.
 - **Write** at checkpoints: when a round of changes is finished, not after every message.
-- **Exit** when the presenter says the outline is ready for review. If the chat has grown long, recommend a fresh chat for the next round.
+- **Exit** when the presenter says the outline is ready for review. Set `reviewed: pending` and **write** OUTLINE.md (status fields only), so a fresh chat knows the review comes next. Then go to D. If the chat has grown long before then, recommend a fresh chat for the next round of changes.
 
 ### D. Independent review (PROMPTS.md 4), fresh chat recommended
 - Hand off first (section 5): a fresh chat isn't anchored to the drafting choices and catches more gaps. If the presenter prefers to stay in this chat, do the review here and say once that it may miss more.
 - In the review chat, do the work of prompt 4 and propose a ranked change list. **Don't write anything until the presenter approves the list.**
 - Apply exactly the approved changes, bump the version, set `reviewed:` to the new version, and **write** the files.
+- If the presenter wants other changes before the review, set `reviewed: no`, write OUTLINE.md, and go back to C.
 - **Pause:** move to E.
 
 ### E. Approve (PROMPTS.md 5)
@@ -131,7 +133,7 @@ The status comment at the top of OUTLINE.md carries the stage, so any chat can t
 | Field | Values | Set when |
 |---|---|---|
 | `approved` | `no`, or the approved version (`v0.4`) | The gate entry is recorded |
-| `reviewed` | `no`, or the version the review's approved changes produced | Step D's changes are written |
+| `reviewed` | `no`; `pending` (ready for review, not yet done); or the version the review's approved changes produced | `pending`: the presenter says the outline is ready for review (step C). The version: step D's changes are written |
 | `deck` | `none`, `pass 1`, `core`, `complete` | Steps F and G finish |
 
 Keep the plain-language `**Status:**` line under the title in step with these fields. Both are outline-only and stripped from the deck.
