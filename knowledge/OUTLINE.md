@@ -1,6 +1,6 @@
 # OUTLINE — [TBD: presentation title]
 
-<!-- status: version 0.0 | phase 1 | last written YYYY-MM-DD | approved: no -->
+<!-- status: version 0.0 | phase 1 | last written YYYY-MM-DD | approved: no | reviewed: no | deck: none -->
 
 **Status:** Phase 1 in progress; outline not yet approved.
 **Session:** [TBD: date, length]

@@ -50,3 +50,6 @@ Knowledge files the presenter collected. They are leads, not the scope.
 ## Deck
 - **Deck file name:** [TBD: e.g., my-talk.html]
 - **Attribution rules beyond the default:** [TBD: default is no individual names; published sources cited with links]
+
+## Working with Claude
+- **Working mode:** [TBD: guided or manual (see GUIDED-WORKFLOW.md). Claude fills this in from the mode you choose in the first chat; change it any time.]

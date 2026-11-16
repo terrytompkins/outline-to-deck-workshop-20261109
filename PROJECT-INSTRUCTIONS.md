@@ -13,6 +13,7 @@ This project produces one presentation in two phases: a structured Markdown outl
 - **OUTLINE.md**: the current outline and the source of truth for content. Build on it; don't restart unless asked.
 - **DECISIONS.md**: dated log of decisions. Respect every *Decided* entry; if a request conflicts with one, say so before proceeding.
 - **WORKFLOW.md**: how the phases, checkpoints, and state-file writes work.
+- **GUIDED-WORKFLOW.md**: the two working modes (guided and manual), how to tell where the presentation stands, and the guided step-by-step flow.
 - **OUTLINE-CONVENTIONS.md**: numbering, tags, callout syntax, and which tags are stripped or rendered.
 - **DECK-BUILD-SPEC.md**: Phase 2 technical rules and the verification checklist.
 - **The style guide named in BRIEF.md** (a STYLE-*.md file): visual tokens, the callout and slide types it defines, and when to propose them. If it says it reuses rules from another style guide, that guide must be uploaded too.
@@ -21,12 +22,19 @@ This project produces one presentation in two phases: a structured Markdown outl
 ## Who you are working with
 Assume you are working with the presenter named in BRIEF.md unless told otherwise. Only the **approver** named in BRIEF.md (usually the presenter) approves decisions and the phase change.
 
-## First chat
-If BRIEF.md still contains `[TBD: ...]` fields that block the work, interview the presenter to fill them (ask in small groups, not all at once), then write BRIEF.md.
+## Working modes
+There are two modes; GUIDED-WORKFLOW.md has the details. Read it at the start of every chat.
+- **Guided:** you lead the presenter through every step, from brief to finished deck, with questions, pausing at each checkpoint and saying when to start a new chat.
+- **Manual:** the presenter runs each step with a prompt from PROMPTS.md or their own request. Do exactly the step asked for, write the files, and stop. Never start the next step on your own; you may name it in one line.
+
+Pick the mode from the presenter's first message in each chat: a mode they name wins; a request for one specific step is handled in manual mode; for an open-ended message ("continue my deck"), use the **Working mode** in BRIEF.md, or ask once if it isn't set.
+
+## Continuing
+"Continue my deck", in any wording and in any chat, means: read the state files, tell the presenter in a line or two where things stand, then take the next step (guided) or name and do only the next step (manual). If BRIEF.md still has `[TBD: ...]` fields, the next step is the interview to fill them, a few questions at a time.
 
 ## Phases: keep them separate
 - **Phase 1, Outline.** Build a comprehensive outline per OUTLINE-CONVENTIONS.md. Do not produce slides, HTML, or slide-level design during Phase 1, even if asked casually; point out that the outline needs approval first. You may and should add the style guide's callout and slide-type tags to the outline as content develops (see "Style tags" below).
-- **Phase 2, Deck.** Begins only when DECISIONS.md contains the gate entry `- YYYY-MM-DD · Decided · Outline vX.Y approved; Phase 2 begins.` (with the real date and version). Build per DECK-BUILD-SPEC.md. Produce a real Reveal.js HTML file; do not use Claude's built-in Slides artifact type or any other presentation format.
+- **Phase 2, Deck.** Begins only when DECISIONS.md contains the gate entry `- YYYY-MM-DD · Decided · Outline vX.Y approved; Phase 2 begins.` (with the real date and version). This holds in both modes and however the request is worded. If asked for deck work before that entry exists, don't start; say the outline hasn't been approved yet (name the current version) and offer to record the approval now if the approver wants to give it. Build per DECK-BUILD-SPEC.md. Produce a real Reveal.js HTML file; do not use Claude's built-in Slides artifact type or any other presentation format.
 
 ## Research
 - Seed inputs are leads, not the scope. They are what the presenter happened to collect, not a curated survey. Research independently (web search, authoritative and published sources named in BRIEF.md) to make coverage comprehensive, and look for topics the seeds miss entirely.
