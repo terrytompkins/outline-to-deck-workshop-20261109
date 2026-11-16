@@ -204,6 +204,30 @@
 .reveal .next a{color:var(--spruce)}
 .reveal .tbd{font-size:1em}
 
+/* Manual vs guided */
+.reveal .modes{display:grid;grid-template-columns:1fr 1fr;gap:.8em;margin-top:.5em;font-size:.58em}
+.reveal .modes>*{min-width:0}
+.reveal .mode{background:#fff;border-radius:10px;border-top:5px solid var(--spruce);padding:.6em .9em .7em}
+.reveal .mode--guided{border-top-color:var(--sun)}
+.reveal .mode__title{font-size:1.3em;font-weight:700;line-height:1.2;margin-bottom:.3em}
+.reveal .mode__title .who{margin-left:.5em;font-size:.65em;font-weight:700;color:var(--caption);text-transform:uppercase;letter-spacing:.04em}
+.reveal .mode ul{font-size:1em;margin:.2em 0 .5em .2em}
+.reveal .mode li{margin:.3em 0}
+.reveal .mode pre.code{font-size:.82em;margin:.3em 0 0}
+
+/* Vertical detail slides under topic 6 */
+.reveal .chats{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;gap:.5em;align-items:stretch;margin:.3em 0 .7em;font-size:.58em}
+.reveal .chats>*{min-width:0}
+.reveal .chat{background:var(--moss);border-radius:10px;padding:.6em .8em}
+.reveal .chat b{display:block;color:var(--spruce);font-size:1.15em;margin-bottom:.15em}
+.reveal .hand{display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:.75em;font-weight:700;color:#8A5F00;text-align:center}
+.reveal .hand .ic{width:1.6em;height:1.6em}
+.reveal .handoff{border-left:6px solid var(--sun);background:var(--sun-tint);border-radius:10px;padding:.5em 1em;font-size:.66em}
+.reveal .handoff p{font-size:1em;margin:.2em 0}
+.reveal table code{font-size:.9em}
+.reveal .statusline{margin-bottom:.4em}
+.reveal .chat b,.reveal .handoff b,.reveal .outcome b{font-weight:700}
+
 </style>
 </head>
 <body>
@@ -214,6 +238,8 @@
 <symbol id="i-hood" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1L7 17M17 7l2.1-2.1"/></symbol>
 <symbol id="i-question" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .9-1 1.6v.6M12 17v.5"/></symbol>
 <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M4 12h15M13 6l6 6-6 6"/></symbol>
+<symbol id="i-down" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></symbol>
+<symbol id="i-compass" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></symbol>
 <symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></symbol>
 </svg>
 <div class="reveal">
@@ -222,13 +248,13 @@
 <!-- TITLE -->
 <section id="title" class="cover" data-background-color="#16443A">
   <svg class="contours chrome" viewBox="0 0 1280 720" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><g fill="none" stroke="#FFFFFF" stroke-opacity=".09" stroke-width="2"><path d="M1139.0,155.5 C1134.3,162.7 1118.9,169.9 1107.1,172.8 C1095.2,175.7 1081.4,174.1 1067.8,172.9 C1054.2,171.7 1032.2,171.4 1025.3,165.7 C1018.3,159.9 1024.3,146.8 1026.0,138.3 C1027.8,129.8 1028.3,120.9 1036.0,114.6 C1043.7,108.4 1059.6,101.7 1072.2,100.9 C1084.8,100.1 1101.0,105.0 1111.5,109.8 C1122.0,114.6 1130.6,121.9 1135.2,129.5 C1139.7,137.1 1143.7,148.2 1139.0,155.5Z"/><path d="M1173.5,168.0 C1164.4,179.5 1139.2,190.3 1119.5,194.5 C1099.9,198.7 1077.9,195.8 1055.7,193.3 C1033.5,190.8 996.5,189.3 986.3,179.5 C976.0,169.7 990.2,148.5 994.3,134.6 C998.4,120.7 998.0,106.0 1010.9,96.0 C1023.9,86.0 1051.8,75.1 1072.2,74.8 C1092.7,74.5 1116.5,85.6 1133.4,94.0 C1150.4,102.4 1167.4,112.9 1174.1,125.2 C1180.8,137.6 1182.6,156.5 1173.5,168.0Z"/><path d="M1205.0,182.3 C1190.2,197.9 1155.7,211.2 1128.2,216.5 C1100.7,221.7 1070.3,218.1 1039.8,213.8 C1009.3,209.5 957.8,205.0 945.2,190.9 C932.6,176.8 956.9,148.3 964.1,129.1 C971.3,109.8 969.7,89.0 988.4,75.5 C1007.1,62.0 1048.6,47.0 1076.5,47.9 C1104.4,48.9 1132.7,68.5 1156.0,81.0 C1179.4,93.6 1208.6,106.1 1216.8,123.0 C1224.9,139.9 1219.7,166.8 1205.0,182.3Z"/><path d="M1232.9,198.1 C1211.1,217.3 1168.6,232.3 1133.1,238.5 C1097.6,244.6 1058.0,241.3 1019.8,234.7 C981.5,228.2 917.7,218.2 903.5,199.4 C889.3,180.5 923.9,146.0 934.8,121.7 C945.6,97.3 943.6,70.0 968.7,53.2 C993.7,36.3 1050.1,17.7 1085.1,20.7 C1120.1,23.6 1149.1,53.7 1178.8,70.8 C1208.6,87.8 1254.4,101.8 1263.4,123.0 C1272.4,144.3 1254.6,178.9 1232.9,198.1Z"/><path d="M1256.8,215.0 C1226.9,237.4 1177.9,253.3 1134.2,260.2 C1090.5,267.1 1040.1,265.7 994.9,256.5 C949.6,247.2 877.7,228.6 862.9,204.6 C848.0,180.5 890.8,141.5 905.7,112.3 C920.5,83.1 919.9,49.0 952.0,29.3 C984.1,9.5 1056.5,-12.0 1098.1,-6.4 C1139.7,-0.8 1165.8,40.9 1201.7,62.9 C1237.7,84.9 1304.6,100.4 1313.7,125.7 C1322.9,151.1 1286.7,192.6 1256.8,215.0Z"/><path d="M1276.8,232.7 C1237.5,257.7 1183.7,273.7 1131.6,281.4 C1079.6,289.1 1015.6,291.7 964.5,279.1 C913.3,266.6 839.8,236.1 825.0,206.3 C810.3,176.6 857.0,134.5 876.0,100.7 C894.9,67.0 898.8,26.1 938.7,3.9 C978.6,-18.3 1067.6,-41.3 1115.4,-32.5 C1163.1,-23.7 1183.1,29.5 1225.0,56.8 C1267.0,84.2 1358.4,102.1 1367.0,131.4 C1375.6,160.7 1316.0,207.7 1276.8,232.7Z"/><path d="M1292.8,251.1 C1243.4,278.0 1186.4,293.4 1125.6,302.0 C1064.7,310.6 983.5,318.9 927.9,302.7 C872.2,286.4 805.4,240.7 791.6,204.7 C777.8,168.7 822.1,124.6 845.0,86.7 C867.9,48.7 880.5,1.1 929.1,-22.8 C977.7,-46.7 1083.2,-69.3 1136.6,-56.8 C1190.0,-44.4 1202.1,19.2 1249.6,52.1 C1297.2,85.0 1414.7,107.2 1421.9,140.4 C1429.1,173.6 1342.2,224.2 1292.8,251.1Z"/><path d="M1305.1,270.0 C1245.0,298.2 1186.2,312.5 1116.2,321.9 C1046.1,331.3 943.4,347.0 884.7,326.7 C826.0,306.4 775.9,242.9 763.8,200.0 C751.7,157.2 785.7,111.4 812.3,69.6 C838.9,27.9 865.1,-25.8 923.2,-50.5 C981.4,-75.2 1102.3,-94.9 1161.2,-78.5 C1220.1,-62.1 1224.1,9.4 1276.7,48.0 C1329.3,86.5 1472.0,115.8 1476.8,152.8 C1481.5,189.8 1365.2,241.8 1305.1,270.0Z"/><path d="M1314.2,289.5 C1243.2,318.3 1183.5,331.1 1103.6,341.3 C1023.7,351.4 895.0,375.2 834.8,350.5 C774.6,325.7 751.9,243.0 742.4,192.8 C732.9,142.6 748.0,94.6 777.8,49.3 C807.6,3.9 853.0,-54.8 921.4,-79.2 C989.8,-103.5 1123.9,-117.2 1188.3,-96.7 C1252.7,-76.2 1251.2,-0.2 1308.1,44.0 C1364.9,88.2 1528.4,127.6 1529.4,168.5 C1530.4,209.4 1385.1,260.7 1314.2,289.5Z"/><path d="M138.2,730.7 C124.1,733.6 104.0,734.3 90.1,730.7 C76.2,727.2 59.8,717.8 54.5,709.4 C49.3,701.0 55.1,689.7 58.7,680.2 C62.3,670.6 65.2,657.8 76.3,652.1 C87.5,646.3 111.1,643.9 125.6,645.7 C140.1,647.5 151.2,656.0 163.4,662.6 C175.5,669.2 196.4,676.9 198.3,685.3 C200.2,693.8 184.8,705.8 174.8,713.3 C164.8,720.9 152.3,727.8 138.2,730.7Z"/><path d="M143.1,753.8 C121.2,758.0 88.4,758.9 67.8,752.6 C47.2,746.3 26.7,729.5 19.6,716.0 C12.5,702.5 18.9,686.1 25.2,671.6 C31.5,657.2 39.1,637.5 57.3,629.3 C75.4,621.1 112.1,618.8 134.1,622.3 C156.1,625.8 170.9,639.7 189.3,650.4 C207.7,661.1 242.6,673.6 244.3,686.4 C246.0,699.3 216.2,716.3 199.3,727.5 C182.5,738.8 165.0,749.6 143.1,753.8Z"/><path d="M144.3,777.4 C114.4,782.7 67.2,783.8 40.9,774.2 C14.6,764.6 -5.1,738.7 -13.4,719.8 C-21.8,700.8 -18.5,679.5 -9.2,660.5 C0.0,641.5 16.2,615.7 42.1,605.6 C68.0,595.5 117.0,594.1 146.2,599.8 C175.4,605.5 193.2,624.6 217.4,639.7 C241.6,654.8 291.0,673.3 291.5,690.4 C292.0,707.5 244.8,728.0 220.3,742.6 C195.7,757.1 174.2,772.2 144.3,777.4Z"/><path d="M141.8,801.6 C103.8,807.7 40.3,808.8 9.4,795.3 C-21.5,781.9 -34.5,745.7 -43.5,720.8 C-52.6,696.0 -57.5,669.7 -45.1,646.4 C-32.6,623.1 -3.5,592.6 31.0,581.3 C65.4,570.0 125.5,570.6 161.7,578.7 C197.9,586.9 218.9,610.5 248.3,630.2 C277.8,650.0 340.3,675.9 338.5,697.3 C336.8,718.6 270.7,741.0 237.9,758.3 C205.1,775.7 179.9,795.4 141.8,801.6Z"/><path d="M135.6,826.0 C89.0,832.8 7.6,833.2 -26.7,815.5 C-61.0,797.7 -61.0,750.6 -70.3,719.5 C-79.6,688.5 -98.1,656.1 -82.3,629.0 C-66.6,601.9 -19.6,568.5 24.2,556.9 C67.9,545.3 137.0,548.6 180.2,559.4 C223.3,570.2 249.2,597.0 283.1,621.6 C317.0,646.2 388.7,681.5 383.6,707.0 C378.6,732.6 294.0,755.2 252.7,775.0 C211.4,794.9 182.1,819.3 135.6,826.0Z"/><path d="M125.4,850.7 C70.0,857.6 -30.4,856.5 -66.9,834.1 C-103.4,811.7 -84.8,753.9 -93.7,716.2 C-102.7,678.5 -139.9,638.5 -120.7,607.9 C-101.4,577.4 -31.9,543.8 21.7,532.8 C75.3,521.8 151.0,528.7 201.2,542.2 C251.4,555.7 285.5,584.4 322.8,613.9 C360.1,643.4 434.6,689.5 425.0,719.3 C415.4,749.1 315.2,771.0 265.2,792.9 C215.3,814.8 180.7,843.8 125.4,850.7Z"/><path d="M111.3,875.5 C46.9,881.9 -72.8,877.9 -110.4,850.5 C-148.0,823.1 -106.3,755.8 -114.4,711.3 C-122.5,666.7 -182.2,616.8 -159.3,583.2 C-136.3,549.5 -40.5,518.6 23.5,509.3 C87.4,500.0 166.8,511.0 224.3,527.3 C281.8,543.6 329.0,572.6 368.4,607.0 C407.8,641.4 476.1,699.4 460.7,733.6 C445.3,767.9 334.2,788.7 276.0,812.3 C217.7,836.0 175.7,869.1 111.3,875.5Z"/><path d="M93.1,900.3 C19.5,905.4 -118.4,896.6 -156.2,864.0 C-193.9,831.5 -126.8,756.6 -133.6,705.0 C-140.4,653.5 -224.1,591.2 -196.9,554.8 C-169.8,518.4 -45.1,493.2 29.3,486.6 C103.6,479.9 183.7,495.8 249.0,514.9 C314.2,534.0 380.8,562.1 420.8,601.2 C460.9,640.3 511.8,710.6 489.2,749.4 C466.7,788.1 351.3,808.7 285.3,833.9 C219.3,859.0 166.6,895.3 93.1,900.3Z"/></g></svg>
-  <p class="series">Workshop · November 9, 2026</p>
+  <p class="series">Workshop · November 9, 2026 / Promptly At 9 · November 17, 2026</p>
   <h1>Outline First: How to Get Claude to Build the Deck You Actually Want</h1>
   <ol class="today">
     <li><span>1</span>Why two phases</li><li><span>2</span>Why Reveal.js</li><li><span>3</span>The process</li>
-    <li><span>4</span>A Claude Project as the workspace</li><li><span>5</span>Tags drive the deck</li>
+    <li><span>4</span>A Claude Project as the workspace</li><li><span>5</span>Tags drive the deck</li><li><span>6</span>Two ways to run it</li>
   </ol>
-  <aside class="notes">Five short slides to set up the workshop: why we work this way, why the output is Reveal.js, what the process looks like, how a Claude Project holds it together, and how tags in the outline control the slides. This deck uses the same Field Guide style the workshop template ships with.</aside>
+  <aside class="notes">Six short slides to set up the workshop: why we work this way, why the output is Reveal.js, what the process looks like, how a Claude Project holds it together, how tags in the outline control the slides, and the two ways to run the process (manual or guided). This deck uses the same Field Guide style the workshop template ships with.</aside>
 </section>
 <!-- TOPIC 1: Why two phases -->
 <section id="s1" class="topic" data-background-color="#E6F0EC">
@@ -290,17 +316,17 @@ flowchart LR
 </pre></figure>
   <div class="phases">
     <div><b>Phase 1</b><span>Many cheap revisions of a numbered, tagged Markdown outline.</span></div>
-    <div class="gate"><b>The gate</b><span>A recorded approval in DECISIONS.md, not a casual "show me a slide".</span></div>
+    <div class="gate"><b>The gate</b><span>A recorded approval in DECISIONS.md. Ask for slides early and Claude says the outline isn't approved yet, then offers to record the approval.</span></div>
     <div><b>Phase 2</b><span>One build from the approved outline, then targeted fixes and checks.</span></div>
   </div>
-  <aside class="notes">This is the same flow as the repo README. Stress the gate: it's what stops Claude from jumping to slides early, and it's a line in a file, so every chat can see it.</aside>
+  <aside class="notes">This is the same flow as the repo README. Stress the gate: it's what stops Claude from jumping to slides early, and it's a line in a file, so every chat can see it. It holds in both working modes and however the request is worded ("continue", "build the deck", "just a few slides to see how it looks"): Claude replies that the outline hasn't been approved, names the current version, and offers to record the approval.</aside>
 </section>
 <!-- TOPIC 4: A Claude Project as the workspace -->
 <section id="s4" class="topic" data-background-color="#E6F0EC">
   <h2><span class="marker">4</span>A Claude Project as the workspace</h2>
-  <figure><svg viewBox="0 0 1000 410" role="img" aria-label="Project instructions govern every chat. Every chat reads the knowledge files; Claude writes OUTLINE.md and DECISIONS.md back at checkpoints."><defs><marker id="ah2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#5C6B67"/></marker><marker id="ah3" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#3E7D3A"/></marker></defs><rect x="0" y="0" width="1000" height="56" rx="8" fill="#16443A"/><text x="500" y="35" text-anchor="middle" class="t-white" font-size="21" font-weight="700">Project instructions: one set of rules for every chat</text><text x="0" y="96" class="t-cap" font-size="16" font-weight="700">KNOWLEDGE FILES</text><text x="660" y="96" class="t-cap" font-size="16" font-weight="700">CHATS</text><rect x="0" y="108" width="470" height="42" rx="6" fill="#FFFFFF" stroke="#D5DDD9" stroke-width="2"/><text x="16" y="135" class="t-ink" font-size="18" font-weight="700">BRIEF.md</text><text x="454" y="135" text-anchor="end" class="t-cap" font-size="16">this talk's settings</text><rect x="0" y="158" width="470" height="42" rx="6" fill="#E7F2E4" stroke="#3E7D3A" stroke-width="2"/><text x="16" y="185" class="t-ink" font-size="18" font-weight="700">OUTLINE.md</text><text x="454" y="185" text-anchor="end" class="t-cap" font-size="16">the content</text><rect x="0" y="208" width="470" height="42" rx="6" fill="#E7F2E4" stroke="#3E7D3A" stroke-width="2"/><text x="16" y="235" class="t-ink" font-size="18" font-weight="700">DECISIONS.md</text><text x="454" y="235" text-anchor="end" class="t-cap" font-size="16">the decision log</text><rect x="0" y="258" width="470" height="42" rx="6" fill="#FFFFFF" stroke="#D5DDD9" stroke-width="2"/><text x="16" y="285" class="t-ink" font-size="18" font-weight="700">WORKFLOW, CONVENTIONS, SPEC</text><text x="454" y="285" text-anchor="end" class="t-cap" font-size="16">the rules</text><rect x="0" y="308" width="470" height="42" rx="6" fill="#FFFFFF" stroke="#D5DDD9" stroke-width="2"/><text x="16" y="335" class="t-ink" font-size="18" font-weight="700">STYLE-*.md</text><text x="454" y="335" text-anchor="end" class="t-cap" font-size="16">the look and the tags</text><rect x="0" y="358" width="470" height="42" rx="6" fill="#FFFFFF" stroke="#D5DDD9" stroke-width="2"/><text x="16" y="385" class="t-ink" font-size="18" font-weight="700">Seed files</text><text x="454" y="385" text-anchor="end" class="t-cap" font-size="16">notes, transcripts, articles</text><rect x="660" y="118" width="340" height="74" rx="8" fill="#FFFFFF" stroke="#1F5C4F" stroke-width="2"/><text x="680" y="150" class="t-ink" font-size="19" font-weight="700">Outline chats</text><text x="680" y="174" class="t-cap" font-size="16">research, draft, revise</text><rect x="660" y="214" width="340" height="74" rx="8" fill="#FFFFFF" stroke="#1F5C4F" stroke-width="2"/><text x="680" y="246" class="t-ink" font-size="19" font-weight="700">Review chat</text><text x="680" y="270" class="t-cap" font-size="16">fresh eyes before approval</text><rect x="660" y="310" width="340" height="74" rx="8" fill="#FFFFFF" stroke="#1F5C4F" stroke-width="2"/><text x="680" y="342" class="t-ink" font-size="19" font-weight="700">Build chat</text><text x="680" y="366" class="t-cap" font-size="16">Phase 2: the deck</text><path d="M478 300 C570 300 580 262 650 262" fill="none" stroke="#5C6B67" stroke-width="2.5" marker-end="url(#ah2)"/><text x="566" y="322" text-anchor="middle" class="t-cap" font-size="16">every chat reads</text><path d="M650 168 C590 168 560 160 478 160" fill="none" stroke="#3E7D3A" stroke-width="3" marker-end="url(#ah3)"/><text x="565" y="150" text-anchor="middle" class="t-fern" font-size="16" font-weight="700">Claude writes back</text></svg></figure>
+  <figure><svg viewBox="0 0 1000 440" role="img" aria-label="Project instructions govern every chat. Every chat reads the knowledge files; Claude writes OUTLINE.md and DECISIONS.md back at checkpoints."><defs><marker id="ah2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#5C6B67"/></marker><marker id="ah3" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#3E7D3A"/></marker></defs><rect x="0" y="0" width="1000" height="56" rx="8" fill="#16443A"/><text x="500" y="35" text-anchor="middle" class="t-white" font-size="21" font-weight="700">Project instructions: one set of rules for every chat</text><text x="0" y="96" class="t-cap" font-size="16" font-weight="700">KNOWLEDGE FILES</text><text x="660" y="96" class="t-cap" font-size="16" font-weight="700">CHATS</text><rect x="0" y="108" width="470" height="40" rx="6" fill="#FFFFFF" stroke="#D5DDD9" stroke-width="2"/><text x="16" y="134" class="t-ink" font-size="18" font-weight="700">BRIEF.md</text><text x="454" y="134" text-anchor="end" class="t-cap" font-size="16">this talk's settings</text><rect x="0" y="156" width="470" height="40" rx="6" fill="#E7F2E4" stroke="#3E7D3A" stroke-width="2"/><text x="16" y="182" class="t-ink" font-size="18" font-weight="700">OUTLINE.md</text><text x="454" y="182" text-anchor="end" class="t-cap" font-size="16">content and status</text><rect x="0" y="204" width="470" height="40" rx="6" fill="#E7F2E4" stroke="#3E7D3A" stroke-width="2"/><text x="16" y="230" class="t-ink" font-size="18" font-weight="700">DECISIONS.md</text><text x="454" y="230" text-anchor="end" class="t-cap" font-size="16">the decision log</text><rect x="0" y="252" width="470" height="40" rx="6" fill="#FFFFFF" stroke="#D5DDD9" stroke-width="2"/><text x="16" y="278" class="t-ink" font-size="18" font-weight="700">GUIDED-WORKFLOW.md</text><text x="454" y="278" text-anchor="end" class="t-cap" font-size="16">modes and next steps</text><rect x="0" y="300" width="470" height="40" rx="6" fill="#FFFFFF" stroke="#D5DDD9" stroke-width="2"/><text x="16" y="326" class="t-ink" font-size="18" font-weight="700">WORKFLOW, CONVENTIONS, SPEC</text><text x="454" y="326" text-anchor="end" class="t-cap" font-size="16">the rules</text><rect x="0" y="348" width="470" height="40" rx="6" fill="#FFFFFF" stroke="#D5DDD9" stroke-width="2"/><text x="16" y="374" class="t-ink" font-size="18" font-weight="700">STYLE-*.md</text><text x="454" y="374" text-anchor="end" class="t-cap" font-size="16">the look and the tags</text><rect x="0" y="396" width="470" height="40" rx="6" fill="#FFFFFF" stroke="#D5DDD9" stroke-width="2"/><text x="16" y="422" class="t-ink" font-size="18" font-weight="700">Seed files</text><text x="454" y="422" text-anchor="end" class="t-cap" font-size="16">notes, transcripts, articles</text><rect x="660" y="118" width="340" height="74" rx="8" fill="#FFFFFF" stroke="#1F5C4F" stroke-width="2"/><text x="680" y="150" class="t-ink" font-size="19" font-weight="700">Outline chats</text><text x="680" y="174" class="t-cap" font-size="16">research, draft, revise</text><rect x="660" y="214" width="340" height="74" rx="8" fill="#FFFFFF" stroke="#1F5C4F" stroke-width="2"/><text x="680" y="246" class="t-ink" font-size="19" font-weight="700">Review chat</text><text x="680" y="270" class="t-cap" font-size="16">fresh eyes before approval</text><rect x="660" y="310" width="340" height="74" rx="8" fill="#FFFFFF" stroke="#1F5C4F" stroke-width="2"/><text x="680" y="342" class="t-ink" font-size="19" font-weight="700">Build chat</text><text x="680" y="366" class="t-cap" font-size="16">Phase 2: the deck</text><path d="M478 300 C570 300 580 262 650 262" fill="none" stroke="#5C6B67" stroke-width="2.5" marker-end="url(#ah2)"/><text x="566" y="322" text-anchor="middle" class="t-cap" font-size="16">every chat reads</text><path d="M650 168 C590 168 560 160 478 160" fill="none" stroke="#3E7D3A" stroke-width="3" marker-end="url(#ah3)"/><text x="565" y="150" text-anchor="middle" class="t-fern" font-size="16" font-weight="700">Claude writes back</text></svg></figure>
   <ul class="tight">
-    <li>Chats don't share history; files do. Claude writes OUTLINE.md and DECISIONS.md at checkpoints, so a fresh chat picks up where the last one stopped.</li>
+    <li>Chats don't share history; files do. Claude writes OUTLINE.md and DECISIONS.md at checkpoints, and OUTLINE.md's status line says what comes next, so a fresh chat picks up where the last one stopped.</li>
     <li>The instructions are the same for every talk. Only BRIEF.md changes.</li>
   </ul>
   <footer><span>Source: <a href="https://support.claude.com/en/articles/9519177">Claude Help Center: Projects</a></span></footer>
@@ -339,6 +365,98 @@ Speaker notes: Pause for answers.</code></pre>
   <aside class="notes">Tags say what a piece of content is; the style guide says what it looks like. Every tag is either rendered or stripped by a written rule, so nothing is left to guesswork. The demo deck uses every tag at least once, so it's the best place to see the mapping.</aside>
 </section>
 
+<!-- TOPIC 6: Manual vs guided (with detail slides below) -->
+<section class="stack">
+<section id="s6" class="topic" data-background-color="#E6F0EC">
+  <h2><span class="marker">6</span>Two ways to run it: manual or guided</h2>
+  <div class="modes">
+    <div class="mode">
+      <div class="mode__title">Manual<span class="who">you drive</span></div>
+      <ul>
+        <li>You paste one numbered prompt from <code>PROMPTS.md</code> for each step.</li>
+        <li>Claude does that step, writes the files, and stops.</li>
+        <li>Best for learning the process, or when you want control of every step.</li>
+      </ul>
+      <pre class="code"><code>1. Kickoff → 2. First outline → 3. Revise
+→ 4. Review → 5. Approve → 6. Build</code></pre>
+    </div>
+    <div class="mode mode--guided">
+      <div class="mode__title">Guided<span class="who">Claude drives</span></div>
+      <ul>
+        <li>Claude interviews you, drafts and revises the outline, then builds the deck.</li>
+        <li>It pauses at every checkpoint and tells you when to start a new chat.</li>
+        <li>Best for everyday use, once you know what each step is for.</li>
+      </ul>
+      <pre class="code"><code>Use guided mode. Take me from my idea
+to a finished deck.</code></pre>
+    </div>
+  </div>
+  <div class="callout callout--remember"><div class="callout__tab"><svg class="ic" aria-hidden="true"><use href="#i-remember"/></svg></div><div class="callout__body"><b class="callout__label">Remember</b><p>Same files, same rules, same gate in both modes: Claude won't start the deck until you approve the outline. In any new chat, say "Continue my deck" and it picks up where you left off.</p></div></div>
+  <p class="next chrome">Next: <code>PROMPTS.md</code>, the two guided prompts and the numbered manual prompts</p>
+  <div class="more chrome"><svg class="ic" aria-hidden="true"><use href="#i-down"/></svg>more on this topic</div>
+  <aside class="notes">Origin story: about 40 attendees asked for help running the prompts. Claude sometimes ran straight from the Kickoff prompt into the outline interview, and the new-chat step between phases was easy to miss. Manual mode is the original prompt-per-step flow, now tightened so each prompt does exactly one step and stops (Kickoff ends with "then stop"). Guided mode is the same process led by Claude, with a pause and a "Next:" line at every checkpoint, and a hard-to-miss "start a new chat" message before the review and before the build. If you skip the new chat, nothing breaks; Claude just carries on. How Claude picks the mode: a mode you name wins; a request for one specific step (any prompt from PROMPTS.md) runs in manual mode without asking; an open-ended message such as "continue my deck" uses the Working mode saved in BRIEF.md, or asks once if none is saved. You can switch at any time. The gate holds in both modes: ask for slides before approval and Claude says the outline hasn't been approved yet and offers to record the approval. Press down for the detail: where things stand, the new-chat handoff, updating an existing project, and the exercise.</aside>
+</section>
+<section id="s6-1">
+  <h3><span class="num">6.1</span>Where things stand: "Continue my deck"</h3>
+  <p>One line at the top of <code>OUTLINE.md</code> tells every new chat which step comes next:</p>
+  <pre class="code statusline"><code>&lt;!-- status: version 0.3 | phase 1 | approved: no | reviewed: no | deck: none --&gt;</code></pre>
+  <table>
+    <thead><tr><th>Claude finds</th><th>So you're at</th><th>Next step</th></tr></thead>
+    <tbody>
+      <tr><td><code>BRIEF.md</code> still has <code>[TBD: …]</code> fields</td><td>Brief</td><td>Interview to fill them</td></tr>
+      <tr><td>Outline is still the v0.0 starter</td><td>First outline</td><td>Research and write v0.1</td></tr>
+      <tr><td>v0.1 or later, <code>reviewed: no</code></td><td>Refine</td><td>Revise until you're ready for review</td></tr>
+      <tr><td>Reviewed, no approval entry in <code>DECISIONS.md</code></td><td>Approve</td><td>Ask for your approval</td></tr>
+      <tr><td>Approved, <code>deck: none</code></td><td>Deck, pass 1</td><td>Build the horizontal slides</td></tr>
+      <tr><td><code>deck: pass 1</code> or <code>core</code></td><td>Deck, pass 2</td><td>Build or finish the vertical slides</td></tr>
+      <tr><td><code>deck: complete</code></td><td>After the build</td><td>Changes, style switch, wrap-up</td></tr>
+    </tbody>
+  </table>
+  <p class="muted">Guided mode carries on from there. Manual mode names the next step, does only that step, and stops.</p>
+  <aside class="notes">"Continue my deck" works in any chat, in either mode. Claude reads BRIEF.md, OUTLINE.md and DECISIONS.md, tells you where things stand in a line or two, then acts. The three status fields (approved, reviewed, deck) are what make that possible without relying on chat history. An outline started before these fields existed has none of them; Claude works the stage out from DECISIONS.md and the outline's "Changes by version", and asks if it can't tell.</aside>
+</section>
+<section id="s6-2">
+  <h3><span class="num">6.2</span>The new-chat handoff</h3>
+  <div class="chats">
+    <div class="chat"><b>Chat 1</b><span>Brief, first outline, revisions</span></div>
+    <div class="hand"><svg class="ic" aria-hidden="true"><use href="#i-arrow"/></svg>new chat</div>
+    <div class="chat"><b>Chat 2</b><span>Independent review, then your approval</span></div>
+    <div class="hand"><svg class="ic" aria-hidden="true"><use href="#i-arrow"/></svg>new chat</div>
+    <div class="chat"><b>Chat 3</b><span>Build the deck: pass 1, then pass 2</span></div>
+  </div>
+  <p>Claude can't open a new chat for you. It saves the state files first, then shows a message that's hard to miss:</p>
+  <div class="handoff"><p><b>Next step: start a new chat.</b> Everything is saved in the project files.</p><p>In a new chat in this project, type: <b>continue my deck</b></p></div>
+  <div class="callout callout--remember"><div class="callout__tab"><svg class="ic" aria-hidden="true"><use href="#i-remember"/></svg></div><div class="callout__body"><b class="callout__label">Remember</b><p>If you miss it and keep going in the same chat, nothing breaks. You spend more tokens and the review may catch fewer gaps. Claude mentions it once and carries on.</p></div></div>
+  <aside class="notes">This is the fix for the confusion some attendees hit: the switch between phases was easy to miss, and everything ended up in one long chat. A fresh chat before the review isn't anchored to the drafting choices, and a fresh chat before the build keeps the cost of each message down. Because progress lives in the files, "continue my deck" in the new chat is all you need to type.</aside>
+</section>
+<section class="st-tiy" id="s6-3">
+  <div class="tiy"><svg class="ic" aria-hidden="true"><use href="#i-compass"/></svg>Try it yourself</div>
+  <h3><span class="num">6.3</span>Update a project you already have</h3>
+  <p class="meta">Time: about 5 minutes</p>
+  <ol class="trail-steps">
+    <li>Open your project's instructions and replace them with the updated <code>PROJECT-INSTRUCTIONS.md</code> text (everything below the horizontal rule).</li>
+    <li>Upload <code>GUIDED-WORKFLOW.md</code> to the project's knowledge.</li>
+    <li>Optional: also replace <code>WORKFLOW.md</code> and take the new <code>PROMPTS.md</code>, so the documents match the instructions.</li>
+    <li>In a new chat, type <code>Continue my deck.</code></li>
+  </ol>
+  <div class="outcome"><b>You should see</b> Claude say where things stand in a line or two, ask once whether you want guided or manual mode, then take the next step.</div>
+  <aside class="notes">For the people who set up a project at the workshop. Their BRIEF.md and OUTLINE.md can stay as they are: older outlines don't have the new status fields, and Claude works out the stage from DECISIONS.md. Because their BRIEF.md has no saved working mode yet, Claude asks once and then records the answer in BRIEF.md.</aside>
+</section>
+<section class="st-tiy" id="s6-4">
+  <div class="tiy"><svg class="ic" aria-hidden="true"><use href="#i-compass"/></svg>Try it yourself</div>
+  <h3><span class="num">6.4</span>Check the gate with the Outlook-to-To-Do script</h3>
+  <p class="meta">The brief and first outline run live; the deck build makes good homework</p>
+  <ol class="trail-steps">
+    <li>In a fresh project, add the instructions and knowledge files. Don't upload seed files. Open <code>examples/outlook-to-todo/PROMPT-SCRIPT.md</code> for the answer sheet.</li>
+    <li>Type <code>Continue my deck.</code> Claude should ask guided or manual, and nothing else. Answer <code>Guided.</code></li>
+    <li>Answer the brief questions from the answer sheet, then say <code>Yes, go ahead</code> for the first outline.</li>
+    <li>Try to skip ahead: <code>Let's skip ahead and build the deck now.</code></li>
+  </ol>
+  <div class="outcome"><b>You should see</b> Claude decline, name the current outline version, say it hasn't been approved, and offer to record the approval now.</div>
+  <aside class="notes">This is the guided run from PROMPT-SCRIPT.md, trimmed to what fits a class session, with two of its deliberate checks: the mode question on an open-ended first message, and the approval gate. Your outline won't match the example's, because Claude researches live; compare structure, not wording. The full run (review, approval, a new chat, pass 1, pass 2) is long, so assign it as homework. The same file also has a manual-mode run that repeats the original prompts in order.</aside>
+</section>
+</section>
+
 </div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/reveal.min.js"></script>
@@ -354,7 +472,7 @@ Reveal.initialize({
 
 // Page numbers drawn inside each slide (Reveal's own number collides with the arrows).
 function addPageNumbers(){
-  var all = Reveal.getSlides(), n = all.length;
+  var all = Reveal.getSlides().filter(function(x){ return !x.classList.contains('stack'); }), n = all.length;
   all.forEach(function(sl, i){
     if (sl.id === 'title' || sl.querySelector(':scope > .pgnum')) return;
     var p = document.createElement('div'); p.className = 'pgnum'; p.textContent = (i + 1) + ' / ' + n; sl.appendChild(p);
