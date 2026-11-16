@@ -28,7 +28,7 @@ How a presentation moves from seed files to a finished deck, and how progress is
 4. **Iterate** with scoped requests ("revise 4.2; add a subsection under 6 on X"). Each revision bumps the version (v0.2, v0.2.1) and adds a line under "Changes by version".
 5. **Add style tags as content settles.** Claude proposes callouts and slide types from the style guide where they fit, and lists what it added.
 6. **Fact-check.** The presenter confirms internal facts; Claude records them under "Facts to present" in DECISIONS.md.
-7. **Review in a fresh chat** before approval (section 7). A new chat isn't anchored to earlier drafting choices and catches more gaps. Once the approved review changes are applied, Claude marks the outline reviewed in its status comment.
+7. **Review in a fresh chat** before approval (section 7). A new chat isn't anchored to earlier drafting choices and catches more gaps. When the presenter says the outline is ready for review, Claude sets `reviewed: pending` in its status comment, so the new chat knows the review comes next. Once the approved review changes are applied, Claude marks the outline reviewed with the new version.
 8. **Approve.** The approver says so explicitly; Claude records the gate entry `- YYYY-MM-DD · Decided · Outline vX.Y approved; Phase 2 begins.`.
 
 Versions: OUTLINE.md uses v0.1, v0.2, v0.2.1 and so on; BRIEF.md and DECISIONS.md use a simple revision number. Restructuring v0.1 may renumber sections; from v0.2 onward numbering is frozen, so new sections get the next unused number and the time plan places them.
