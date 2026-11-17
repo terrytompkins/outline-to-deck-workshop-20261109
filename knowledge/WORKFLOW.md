@@ -7,13 +7,16 @@ How a presentation moves from seed files to a finished deck, and how progress is
 - **Chats don't share history.** Each chat starts with only the project instructions and knowledge files, so progress must live in files: OUTLINE.md and DECISIONS.md.
 - **Content first, deck second.** Text is cheap to write, revise, and re-read; a generated deck is expensive on all three. Iterating on the outline costs a fraction of iterating on slides, and every "redo the deck" pays for the whole deck again.
 - **An explicit gate.** Without one, Claude tends to jump to slides early. Phase 2 starts only when DECISIONS.md records approval.
+- **Two ways to drive it.** In **guided mode** Claude leads every step with questions and says when to start a new chat. In **manual mode** the presenter runs each step with a prompt from PROMPTS.md, and Claude does only that step. Both follow the same rules and the same gate. GUIDED-WORKFLOW.md has the details.
 
 ## 2. Setup (once per presentation)
 
 1. Create a Claude Project. Paste PROJECT-INSTRUCTIONS.md into its instructions.
-2. Upload the knowledge files: BRIEF.md, OUTLINE.md, DECISIONS.md, WORKFLOW.md, OUTLINE-CONVENTIONS.md, DECK-BUILD-SPEC.md, the style guide you'll use, and any guide it reuses rules from. To switch styles later, upload the new guide too.
+2. Upload the knowledge files: BRIEF.md, OUTLINE.md, DECISIONS.md, WORKFLOW.md, GUIDED-WORKFLOW.md, OUTLINE-CONVENTIONS.md, DECK-BUILD-SPEC.md, the style guide you'll use, and any guide it reuses rules from. To switch styles later, upload the new guide too.
 3. Upload seed inputs. Condense large or noisy ones first (section 6).
-4. In the first chat, ask Claude to interview you and fill in BRIEF.md.
+4. In the first chat, choose a mode. Say "Use guided mode" and Claude interviews you to fill in BRIEF.md, then carries on through the outline. Or use the Kickoff prompt from PROMPTS.md to fill in BRIEF.md only. If your first message doesn't name a mode, Claude asks.
+
+**Picking up later.** In any new chat, say "continue my deck". Claude reads the state files, tells you where things stand, and takes the next step (guided) or names it and does only that step (manual). It never starts the deck before the outline is approved.
 
 ## 3. Phase 1: outline
 
@@ -25,7 +28,7 @@ How a presentation moves from seed files to a finished deck, and how progress is
 4. **Iterate** with scoped requests ("revise 4.2; add a subsection under 6 on X"). Each revision bumps the version (v0.2, v0.2.1) and adds a line under "Changes by version".
 5. **Add style tags as content settles.** Claude proposes callouts and slide types from the style guide where they fit, and lists what it added.
 6. **Fact-check.** The presenter confirms internal facts; Claude records them under "Facts to present" in DECISIONS.md.
-7. **Review in a fresh chat** before approval (section 7). A new chat isn't anchored to earlier drafting choices and catches more gaps.
+7. **Review in a fresh chat** before approval (section 7). A new chat isn't anchored to earlier drafting choices and catches more gaps. When the presenter says the outline is ready for review, Claude sets `reviewed: pending` in its status comment, so the new chat knows the review comes next. Once the approved review changes are applied, Claude marks the outline reviewed with the new version.
 8. **Approve.** The approver says so explicitly; Claude records the gate entry `- YYYY-MM-DD · Decided · Outline vX.Y approved; Phase 2 begins.`.
 
 Versions: OUTLINE.md uses v0.1, v0.2, v0.2.1 and so on; BRIEF.md and DECISIONS.md use a simple revision number. Restructuring v0.1 may renumber sections; from v0.2 onward numbering is frozen, so new sections get the next unused number and the time plan places them.
@@ -38,7 +41,8 @@ Build per DECK-BUILD-SPEC.md. Start in a fresh chat with the approved outline; d
 2. **Pass 1:** title, agenda, and every horizontal slide. This is a complete, presentable walk-through on its own.
 3. **Pass 2:** vertical slides, in priority order: Core sections first (an interim checkpoint), then Brief, then Self-guided.
 4. **Verify every slide** with the checklist in DECK-BUILD-SPEC.md, and look at screenshots before calling it done.
-5. **Content changes after approval:** Claude proposes the change; once the approver agrees, Claude bumps the outline version, records a Decided entry (e.g. `Outline v1.1: 4.2 revised after approval`), then regenerates only the affected slides. Phase 2 stays open; no new gate entry is needed.
+5. **Record progress** in OUTLINE.md's status comment (`deck: pass 1`, `core`, `complete`) so a later chat knows where the build stands. The deck itself is a file in the chat, not a state file; a later chat that needs it asks the presenter to attach it.
+6. **Content changes after approval:** Claude proposes the change; once the approver agrees, Claude bumps the outline version, records a Decided entry (e.g. `Outline v1.1: 4.2 revised after approval`), then regenerates only the affected slides. Phase 2 stays open; no new gate entry is needed.
 
 ## 5. Writing the state files
 
@@ -49,7 +53,7 @@ The state files are BRIEF.md, OUTLINE.md, and DECISIONS.md. Claude writes them d
 **How to write:**
 1. Re-read the file from project knowledge immediately before writing. A long chat may hold an outdated copy, and another chat in the project may have written since.
 2. Apply only the intended changes to that latest version.
-3. Update the status comment near the top of the file (`<!-- status: … -->`): version or revision, phase, date.
+3. Update the status comment near the top of the file (`<!-- status: … -->`): version or revision, phase, date. OUTLINE.md's comment also carries `approved`, `reviewed`, and `deck` fields, so any chat can tell which step comes next (GUIDED-WORKFLOW.md §6).
 4. Replace the file at its existing path. Never create a copy with a new name.
 5. Report what changed, by section number. For a large change, also give a short list the presenter can check.
 
@@ -69,6 +73,7 @@ The state files are BRIEF.md, OUTLINE.md, and DECISIONS.md. Claude writes them d
 
 - **One job per chat.** Start a fresh chat for a review, for Phase 2, or when a chat has grown long. Every message in a long chat resends all of it.
 - **Hand off with files, not memory.** Before switching chats, make sure the state files are written.
+- **Missed a chat switch?** Nothing breaks. In guided mode Claude says when to start a new chat (before the review and before Phase 2); if you keep going in the same chat, it carries on. A new chat started at any point picks up with "continue my deck".
 - **Ask Claude to ask first** on anything substantial: "Before you start, ask me up to three questions whose answers would change the result."
 
 ## 8. Lessons from earlier runs
